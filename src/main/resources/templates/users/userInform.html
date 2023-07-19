@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <table class="table table-striped" th:object="${user}">
+            <tbody>
+            <tr>
+                <th>#</th>
+                <td th:text="*{id}"></td>
+            </tr>
+            <tr>
+                <th>닉네임</th>
+                <td th:text="*{username}"></td>
+            </tr>
+            <tr>
+                <a href="#" th:href="@{/users/{userId}/edit (userId=${user.id})}" class="btn btn-primary" role="button">수정</a>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

@@ -1,0 +1,17 @@
+package study.board.service.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import study.board.entity.User;
+
+@Getter @Setter
+public class UserInform {
+
+    private Long id;
+    private String username;
+
+    public UserInform(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+    }
+}
