@@ -15,13 +15,20 @@
                 <th>닉네임</th>
                 <td th:text="*{username}"></td>
             </tr>
-            <tr>
-                <a href="#" th:href="@{/users/{userId}/edit (userId=${user.id})}" class="btn btn-primary" role="button">수정</a>
-            </tr>
             </tbody>
         </table>
+        <div class="clearfix mb-1">
+            <a href="#" th:href="@{/users/{userId}/edit (userId=${user.id})}"
+               class="btn btn-primary float-end" role="button">수정</a>
+        </div>
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
+<script>
+    const urlParams = new URL(location.href).searchParams;
+    const status = urlParams.get('status');
+    if(status)
+        alert("저장되었습니다.");
+</script>
 </body>
 </html>
