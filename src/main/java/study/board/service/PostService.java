@@ -5,13 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import study.board.entity.Board;
+import study.board.entity.Comment;
 import study.board.entity.Post;
 import study.board.entity.User;
-import study.board.repository.BoardRepository;
+import study.board.repository.CommentRepository;
 import study.board.repository.PostRepository;
-import study.board.repository.UserRepository;
-import study.board.service.dto.PostForm;
-import study.board.service.dto.PostUpdateForm;
+import study.board.service.dto.*;
 
 @Service
 @Transactional
@@ -23,26 +22,28 @@ public class PostService {
     private final BoardService boardService;
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
-    public void createPost(PostForm postForm) {
-        Board board = boardService.findById(postForm.getBoardId());
-        User user = userService.findById(postForm.getUserId());
+    public Long createPost(PostCreateForm form) {
+        Board board = boardService.findById(form.getBoardId());
+        User user = userService.findById(form.getUserId());
 
-        postRepository.save(new Post(postForm.getTitle(), postForm.getContent(), board, user));
+        return postRepository.save(new Post(form.getTitle(), form.getContent(), board, user)).getId();
     }
 
     public Post findById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
-/*
 
-    public PostRequestDto requestPost(Long id) {
-        PostRequestDto postRequestDto = postRepository.findPostRequestDto(id);
-
+    public PostSummaryInform toPostSummaryInform(Long id) {
+        return new PostSummaryInform(findById(id));
     }
 
-*/
+    public PostInform toPostInform(Long id) {
+        return new PostInform(findById(id));
+    }
+
     public void updatePost(PostUpdateForm postUpdateForm) {
         Post post = findById(postUpdateForm.getPostId());
         Board board = boardService.findById(postUpdateForm.getBoardId());
@@ -50,4 +51,13 @@ public class PostService {
         post.updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
     }
 
+    public void addLike(Long id) {
+        findById(id).addLike();
+    }
+
+    public void saveComment(CommentForm form) {
+        User user = userService.findById(form.getUserId());
+        Post post = findById(form.getPostId());
+        commentRepository.save(new Comment(form.getContent(), user, post));
+    }
 }

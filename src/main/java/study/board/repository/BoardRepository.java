@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Optional<Board> findByName(String name);
+    boolean existsByName(String name);
     List<Board> findByNameContaining(String name);
 
 }

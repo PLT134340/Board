@@ -1,22 +1,20 @@
 package study.board.service;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import study.board.entity.Board;
 import study.board.entity.User;
 import study.board.repository.BoardRepository;
-import study.board.service.dto.BoardForm;
+import study.board.service.dto.BoardCreateForm;
 import study.board.service.dto.BoardInform;
+import study.board.service.dto.BoardListInform;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Validated
 @RequiredArgsConstructor
 public class BoardService {
 
@@ -24,10 +22,19 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public void createBoard(BoardForm form) {
-        User user = userService.findByUsername(form.getUsername());
-        boardRepository.save(new Board(form.getName(), form.getSubtitle(), user));
+    public Long createBoard(BoardCreateForm form) {
+        validateDuplicateName(form.getName());
+        User user = userService.findById(form.getUserId());
+        return boardRepository
+                .save(new Board(form.getName(), form.getSubtitle(), user))
+                .getId();
     }
+
+    private void validateDuplicateName(String name) {
+        if(boardRepository.existsByName(name))
+            throw new IllegalStateException("already exists name");
+    }
+
 
     public Board findById(Long id) {
         return boardRepository.findById(id)
@@ -45,10 +52,10 @@ public class BoardService {
     }
 */
 
-    public List<String> nameSearch(String name) {
+    public List<BoardListInform> searchByName(String name) {
         return boardRepository.findByNameContaining(name)
                 .stream()
-                .map(b -> b.getName())
+                .map(board -> new BoardListInform(board))
                 .collect(Collectors.toList());
     }
 
