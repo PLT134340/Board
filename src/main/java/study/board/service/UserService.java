@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
-import study.board.service.dto.UserForm;
+import study.board.service.dto.UserCreateForm;
 import study.board.service.dto.UserUpdateForm;
 import study.board.service.dto.UserInform;
 
@@ -21,16 +21,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Long join(UserForm form) {
+    public Long join(UserCreateForm form) {
         validateDuplicateUsername(form.getUsername());
-        User user = new User(form.getUsername());
-        userRepository.save(user);
+        User user = userRepository.save(new User(form.getUsername()));
         return user.getId();
     }
 
     @Transactional(readOnly = true)
     public void validateDuplicateUsername(String username) {
-        if(userRepository.existsByUsername(username))
+        if (userRepository.existsByUsername(username))
             throw new IllegalStateException("already exists username");
     }
 
@@ -47,7 +46,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserInform> findAll() {
+    public List<UserInform> findAllToUserInform() {
        return userRepository.findAll()
                .stream()
                .map(user -> new UserInform(user))
@@ -55,13 +54,22 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserInform findOne(Long id) {
+    public List<String> findAllToUsername() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> user.getUsername())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public UserInform toUserInform(Long id) {
         return new UserInform(findById(id));
     }
 
-    public void modify(UserUpdateForm userUpdateForm, Long userId) {
+    public void modify(UserUpdateForm form, Long userId) {
+        validateDuplicateUsername(form.getUsername());
         User user = findById(userId);
-        user.updateUsername(userUpdateForm.getNewUsername());
+        user.updateUsername(form.getUsername());
     }
 
     public void withdraw(Long id) {
