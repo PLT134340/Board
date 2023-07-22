@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class PostForm {
+public class PostCreateForm {
 
     @NotBlank
     private String title;

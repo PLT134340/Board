@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import study.board.entity.Board;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,7 @@ public class BoardInform {
     private Long id;
     private String name;
     private String subtitle;
-    private List<PostInform> posts;
+    private List<PostSummaryInform> posts;
 
     public BoardInform(Board board) {
         id = board.getId();
@@ -22,7 +21,7 @@ public class BoardInform {
         subtitle = board.getSubtitle();
         posts = board.getPosts()
                 .stream()
-                .map(post -> new PostInform(post))
+                .map(post -> new PostSummaryInform(post))
                 .collect(Collectors.toList());
     }
 

@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UserForm {
+public class BoardCreateForm {
 
     @NotBlank
-    private String username;
+    private String name;
+    @NotBlank
+    private String subtitle;
+    private Long userId;
 
 }
