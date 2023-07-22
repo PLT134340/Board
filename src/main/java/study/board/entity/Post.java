@@ -24,8 +24,9 @@ public class Post extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-//    private int like;
-    @OneToMany(mappedBy = "post")
+    @Column(name = "likes")
+    private int like;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public Post(String title, String content, Board board, User user) {
@@ -33,6 +34,7 @@ public class Post extends DateEntity {
         this.content = content;
         this.board = board;
         this.user = user;
+        like = 0;
     }
 
     public void updatePost(String title, String content) {
@@ -40,4 +42,7 @@ public class Post extends DateEntity {
         this.content = content;
     }
 
+    public void addLike() {
+        like++;
+    }
 }
