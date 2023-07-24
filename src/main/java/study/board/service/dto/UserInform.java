@@ -10,6 +10,8 @@ public class UserInform {
     private Long id;
     private String username;
 
+    public UserInform() {}
+
     public UserInform(User user) {
         this.id = user.getId();
         this.username = user.getUsername();

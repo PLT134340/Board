@@ -22,8 +22,8 @@ public class ProductInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         // 더미 데이터 작성
-        User kim = new User("kim");
-        User lee = new User("lee");
+        User kim = new User("kim", "1234");
+        User lee = new User("lee", "2345");
 
         Board jpa = new Board("jpa", "orm", kim);
         Board toby = new Board("toby", "spring 3.1", lee);

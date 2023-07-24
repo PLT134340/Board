@@ -15,13 +15,17 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     private String username;
+    private String password;
 
-    public User(String username) {
+    public User(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 
-    public Long updateUsername(String username) {
+    public Long update(String username, String password) {
         this.username = username;
+        this.password = password;
         return this.id;
     }
+
 }

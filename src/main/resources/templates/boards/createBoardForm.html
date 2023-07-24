@@ -19,12 +19,6 @@
             <input type="text" th:field="*{subtitle}" class="form-control" placeholder="설명"
                    th:class="${#fields.hasErrors('subtitle')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('subtitle')}" th:errors="*{subtitle}">Incorrect date</p>
-            <label th:for="userId">설립자</label>
-            <select class="form-select" th:field="*{userId}">
-                <option value="except">--선택--</option>
-                <option th:each="userInform : ${userInforms}"
-                        th:value="${userInform.id}" th:text="${userInform.username}"></option>
-            </select>
             <div class="clearfix">
                 <button type="submit" class="btn btn-primary my-1 float-end">제출</button>
             </div>

@@ -1,12 +1,14 @@
 package study.board.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
 import study.board.service.dto.UserCreateForm;
+import study.board.service.dto.UserLoginForm;
 import study.board.service.dto.UserUpdateForm;
 import study.board.service.dto.UserInform;
 
@@ -23,15 +25,30 @@ public class UserService {
 
     public Long join(UserCreateForm form) {
         validateDuplicateUsername(form.getUsername());
-        User user = userRepository.save(new User(form.getUsername()));
+        User user = userRepository.save(new User(form.getUsername(), form.getPassword()));
         return user.getId();
     }
+
+    public Long login(UserLoginForm form) {
+        validateCorrectPassword(form);
+        User user = findByUsername(form.getUsername());
+        return user.getId();
+    }
+
+    private void validateCorrectPassword(UserLoginForm form) {
+        if (!findByUsername(form.getUsername()).getPassword().equals(form.getPassword())) {
+            throw new IllegalStateException("not match password");
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public void validateDuplicateUsername(String username) {
         if (userRepository.existsByUsername(username))
             throw new IllegalStateException("already exists username");
     }
+
+
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
@@ -69,7 +86,7 @@ public class UserService {
     public void modify(UserUpdateForm form, Long userId) {
         validateDuplicateUsername(form.getUsername());
         User user = findById(userId);
-        user.updateUsername(form.getUsername());
+        user.update(form.getUsername(), form.getPassword());
     }
 
     public void withdraw(Long id) {

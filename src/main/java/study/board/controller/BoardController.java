@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.board.common.argumentresolver.Login;
 import study.board.service.BoardService;
 import study.board.service.PostService;
 import study.board.service.UserService;
@@ -20,23 +21,21 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final UserService userService;
     private final PostService postService;
 
     @GetMapping("/create")
-    public String createForm(@ModelAttribute("form") BoardCreateForm boardCreateForm, Model model) {
-        List<UserInform> userInforms = userService.findAllToUserInform();
-        model.addAttribute("userInforms", userInforms);
+    public String createForm(@ModelAttribute("form") BoardCreateForm boardCreateForm) {
         return "boards/createBoardForm";
     }
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("form") BoardCreateForm form, BindingResult result,
-                         RedirectAttributes redirectAttributes) {
+                         @Login UserInform userInform, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "boards/createBoardForm";
         }
 
+        form.setUserId(userInform.getId());
         Long boardId = boardService.createBoard(form);
 
         redirectAttributes.addAttribute("boardId", boardId);
@@ -45,7 +44,8 @@ public class BoardController {
     }
 
     @GetMapping
-    public String search(@RequestParam(value = "boardName", required = false, defaultValue = "") String boardName, Model model) {
+    public String search(@RequestParam(value = "boardName", required = false, defaultValue = "") String boardName,
+                         Model model) {
         List<BoardListInform> boardInforms = boardService.searchByName(boardName);
         model.addAttribute("boardInforms", boardInforms);
         return "boards/boardLists";
@@ -58,22 +58,27 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/write")
-    public String createPostForm(@PathVariable("boardId") Long boardId,
-                             @ModelAttribute("form") PostCreateForm form,
-                             Model model) {
-        form.setBoardId(boardId);
-        List<UserInform> userInforms = userService.findAllToUserInform();
-        model.addAttribute("userInforms", userInforms);
+    public String createPostForm(@PathVariable("boardId") Long boardId, @ModelAttribute("form") PostCreateForm form,
+                                 Model model) {
+        model.addAttribute("boardId", boardId);
         return "posts/createPostForm";
     }
 
-    @PostMapping("/write")
-    public String createPost(@Valid @ModelAttribute("form") PostCreateForm form, BindingResult result,
-                             RedirectAttributes redirectAttributes) {
+    @PostMapping("{boardId}/write")
+    public String createPost(@PathVariable("boardId") Long boardId,
+                             @Valid @ModelAttribute("form") PostCreateForm form, BindingResult result,
+                             @Login UserInform userInform, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "posts/createPostForm";
+        }
+
+        form.setUserId(userInform.getId());
+        form.setBoardId(boardId);
         Long postId = postService.createPost(form);
 
-        redirectAttributes.addAttribute("boardId", form.getBoardId());
+        redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
+
         return "redirect:/boards/{boardId}/{postId}";
     }
 
@@ -81,13 +86,11 @@ public class BoardController {
     @GetMapping("/{boardId}/{postId}")
     public String postInform(@PathVariable("boardId") Long boardId,
                              @PathVariable("postId") Long postId,
-                             @ModelAttribute("commentForm") CommentForm commentForm,
+                             @ModelAttribute("commentForm") CommentForm form,
                              Model model) {
         PostInform postInform = postService.toPostInform(postId);
-        List<UserInform> userInforms = userService.findAllToUserInform();
 
         model.addAttribute("postInform", postInform);
-        model.addAttribute("userInforms", userInforms);
 
         return "posts/postInform";
     }
@@ -97,19 +100,23 @@ public class BoardController {
                        @PathVariable("postId") Long postId,
                        RedirectAttributes redirectAttributes) {
         postService.addLike(postId);
+
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
+
         return "redirect:/boards/{boardId}/{postId}";
     }
 
     @PostMapping("/{boardId}/{postId}/comment")
-    public String comment(@PathVariable("boardId") Long boardId,
-                          @PathVariable("postId") Long postId,
-                          @ModelAttribute("comment") CommentForm comment,
+    public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
+                          @ModelAttribute("comment") CommentForm form, @Login UserInform userInform,
                           RedirectAttributes redirectAttributes) {
-        postService.saveComment(comment);
+        form.setUserId(userInform.getId());
+        postService.saveComment(form);
+
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
+
         return "redirect:/boards/{boardId}/{postId}";
     }
 

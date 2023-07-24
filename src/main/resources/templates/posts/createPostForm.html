@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <form role="form" th:action="@{/boards/write}" th:object="${form}" method="post">
+    <form role="form" th:action="@{/boards/{boardId}/write (boardId=${boardId})}" th:object="${form}" method="post">
         <div class="form-group">
             <label th:for="title">제목</label>
             <input type="text" th:field="*{title}" class="form-control" placeholder="이름"
@@ -19,14 +19,6 @@
             <input type="text" th:field="*{content}" class="form-control" placeholder="설명"
                    th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect date</p>
-            <label th:for="boardId">게시판 ID</label>
-            <input type="text" th:field="*{boardId}" th:value="*{boardId}" class="form-control">
-            <label th:for="userId">작성자</label>
-            <select class="form-select" th:field="*{userId}">
-                <option value="except">--선택--</option>
-                <option th:each="userInform : ${userInforms}"
-                        th:value="${userInform.id}" th:text="${userInform.username}"></option>
-            </select>
             <div class="clearfix">
                 <button type="submit" class="btn btn-primary my-1 float-end">제출</button>
             </div>

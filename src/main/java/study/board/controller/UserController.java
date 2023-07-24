@@ -1,14 +1,20 @@
 package study.board.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.board.common.argumentresolver.Login;
 import study.board.service.UserService;
 import study.board.service.dto.UserCreateForm;
+import study.board.service.dto.UserLoginForm;
 import study.board.service.dto.UserUpdateForm;
 import study.board.service.dto.UserInform;
 
@@ -42,10 +48,38 @@ public class UserController {
 
         Long userId = userService.join(form);
 
-        redirectAttributes.addAttribute("userId", userId);
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/users/{userId}";
+        return "redirect:/users/sign-in";
+    }
+
+    @GetMapping("/sign-in")
+    public String loginForm(@ModelAttribute("form") UserLoginForm form) {
+        return "users/loginForm";
+    }
+
+    @PostMapping("/sign-in")
+    public String login(@Valid @ModelAttribute("form") UserLoginForm form, BindingResult result,
+                        @RequestParam(defaultValue = "/") String redirectURL,
+                        HttpServletRequest request) {
+        if(result.hasErrors()) {
+            return "users/loginForm";
+        }
+
+        Long userId = userService.login(form);
+        UserInform userInform = userService.toUserInform(userId);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userInform", userInform);
+
+        return "redirect:" + redirectURL;
+    }
+
+    @GetMapping("/sign-out")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+        return "redirect:/";
     }
 
     @GetMapping("/{userId}")
@@ -57,7 +91,9 @@ public class UserController {
 
 
     @GetMapping("/{userId}/edit")
-    public String modifyForm(@PathVariable("userId") Long userId, @ModelAttribute("form") UserUpdateForm form) {
+    public String modifyForm(@PathVariable("userId") Long userId, @ModelAttribute("form") UserUpdateForm form,
+                             @Login UserInform userInform) {
+
         form.setUsername(userService.findById(userId).getUsername());
         return "users/modifyUserForm";
     }

@@ -35,17 +35,11 @@
         <hr>
         <form role="form" th:action="@{/boards/{boardId}/{postId}/comment (boardId=${boardId}, postId=*{id})}"  method="post">
             <div class="form-group" th:object="${commentForm}">
-                <label th:for="userId">닉네임</label>
-                <select class="form-select" th:field="*{userId}">
-                    <option value="except">--선택--</option>
-                    <option th:each="userInform : ${userInforms}"
-                            th:value="${userInform.id}" th:text="${userInform.username}"></option>
-                </select>
                 <label th:for="content">댓글</label>
                 <input type="text" th:field="*{content}" class="form-control" placeholder="댓글">
-                <div class="clearfix">
+                <p class="clearfix">
                     <button type="submit" class="btn btn-primary my-1 float-end">제출</button>
-                </div>
+                </p>
             </div>
         </form>
         <table class="table table-group-divider">
