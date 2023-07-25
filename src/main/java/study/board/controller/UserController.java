@@ -1,11 +1,9 @@
 package study.board.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -92,7 +90,11 @@ public class UserController {
 
     @GetMapping("/{userId}/edit")
     public String modifyForm(@PathVariable("userId") Long userId, @ModelAttribute("form") UserUpdateForm form,
-                             @Login UserInform userInform) {
+                             @Login UserInform userInform, RedirectAttributes redirectAttributes) {
+        if (userId != userInform.getId()) {
+            redirectAttributes.addAttribute("userId", userId);
+            return "redirect:/users/{userId}";
+        }
 
         form.setUsername(userService.findById(userId).getUsername());
         return "users/modifyUserForm";
@@ -102,6 +104,7 @@ public class UserController {
     public String modify(@PathVariable("userId") Long userId,
                          @Valid @ModelAttribute("form") UserUpdateForm form, BindingResult result,
                          RedirectAttributes redirectAttributes) {
+
         if (result.hasErrors()) {
             return "users/modifyUserForm";
         }

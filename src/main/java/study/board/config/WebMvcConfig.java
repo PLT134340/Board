@@ -6,11 +6,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import study.board.common.argumentresolver.LoginArgumentResolver;
 import study.board.common.interceptor.LonginInterceptor;
+import study.board.common.interceptor.UserEditInterceptor;
 
 import java.util.List;
 
 @Configuration
-public class LoginConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -26,5 +27,10 @@ public class LoginConfig implements WebMvcConfigurer {
                         "/", "/users/sign-in", "/users/sign-out", "/users/sign-up",
                         "/css/**", "/*.ico", "/error"
                 );
+
+        registry.addInterceptor(new UserEditInterceptor())
+                .order(2)
+                .addPathPatterns("/users/**")
+                .excludePathPatterns("/users", "/users/sign-in", "/users/sign-out", "/users/sign-up");
     }
 }

@@ -15,9 +15,9 @@ public class HomeController {
     public String home(@Login UserInform userInform, Model model) {
         if (userInform == null) {
             return "home";
-        } else {
-            model.addAttribute("userInform", userInform);
-            return "loginHome";
         }
+
+        model.addAttribute("userInform", userInform);
+        return "loginHome";
     }
 }
