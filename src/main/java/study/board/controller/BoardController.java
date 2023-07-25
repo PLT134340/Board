@@ -2,6 +2,9 @@ package study.board.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,8 +55,20 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public String boardInform(@PathVariable("boardId") Long boardId, Model model) {
-        model.addAttribute("boardInform", new BoardInform(boardService.findById(boardId)));
+    public String boardInform(@PathVariable("boardId") Long boardId,
+                              @RequestParam(value = "title", defaultValue = "") String title,
+                              @PageableDefault(size = 10) Pageable pageable, Model model) {
+        BoardInform boardInform = new BoardInform(boardService.findById(boardId));
+
+        Page<PostSummaryInform> page = postService.searchByTitle(title, pageable);
+        List<PostSummaryInform> posts = page.getContent();
+
+        model.addAttribute("boardInform", boardInform);
+        model.addAttribute("page", pageable.getPageNumber());
+        model.addAttribute("size", pageable.getPageSize());
+        model.addAttribute("total", page.getTotalPages());
+        model.addAttribute("posts", posts);
+
         return "boards/boardInform";
     }
 

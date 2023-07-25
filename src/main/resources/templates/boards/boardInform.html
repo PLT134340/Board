@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${boardInform.posts}">
+            <tr th:each="post : ${posts}">
                 <td><a href="#" th:href="@{{boardId}/{postId}(boardId=${boardInform.id}, postId=${post.id})}"
                        th:text="${post.id}"></a></td>
                 <td th:text="${post.title}"></td>
@@ -32,6 +32,24 @@
             </tr>
             </tbody>
         </table>
+        <div class="btn-group mb-3" role="group" th:with="start=${page / size * size},
+            end=${(start + size < total) ? start + size - 1 : total - 1}">
+            <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = 0)}"
+               th:if="${start} > 0" th:text="'<<'"
+               class="btn btn-outline-secondary" role="button">첫 페이지</a>
+            <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = ${start} - 1)}"
+               th:if="${start} > 0" th:text="'<'"
+               class="btn btn-outline-secondary" role="button">이전 페이지</a>
+            <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page=${num})}"
+               th:each="num : ${#numbers.sequence(start, end)}" th:text="${num} + 1"
+               class="btn btn-outline-secondary" role="button">번호</a>
+            <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = ${end} + 1)}"
+               th:if="${end} < ${total} - 1" th:text="'>'"
+               class="btn btn-outline-secondary" role="button">다음 페이지</a>
+            <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = ${total} - 1)}"
+               th:if="${end} < ${total} - 1" th:text="'>>'"
+               class="btn btn-outline-secondary" role="button">마지막 페이지</a>
+        </div>
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

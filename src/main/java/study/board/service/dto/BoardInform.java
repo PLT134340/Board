@@ -13,16 +13,11 @@ public class BoardInform {
     private Long id;
     private String name;
     private String subtitle;
-    private List<PostSummaryInform> posts;
 
     public BoardInform(Board board) {
         id = board.getId();
         name = board.getName();
         subtitle = board.getSubtitle();
-        posts = board.getPosts()
-                .stream()
-                .map(post -> new PostSummaryInform(post))
-                .collect(Collectors.toList());
     }
 
 }

@@ -11,9 +11,12 @@ import study.board.repository.BoardRepository;
 import study.board.repository.PostRepository;
 import study.board.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
-public class ProductInitializer implements ApplicationRunner {
+public class BoardInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
@@ -39,6 +42,10 @@ public class ProductInitializer implements ApplicationRunner {
         hello.getComments().add(comment3);
 
         jpa.getPosts().add(hello);
+
+        for (int i = 0; i < 200; i++) {
+            jpa.getPosts().add(new Post(hello.getTitle(), hello.getContent(), hello.getBoard(), hello.getUser()));
+        }
 
         // 더미 데이터 저장
         userRepository.save(kim);
