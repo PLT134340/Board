@@ -3,6 +3,7 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -38,15 +39,14 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
 
-    public Page<PostSummaryInform> searchByTitle(String title, Pageable pageable) {
-        return postRepository.findByTitleContaining(title, pageable)
-                .map(post -> new PostSummaryInform(post));
+    public PageInform searchByKeyword(String type, String keyword, Pageable pageable) {
+        if(type.equals("title")) {
+            return new PageInform(postRepository.findByTitleContaining(keyword, pageable), type, keyword);
+        } else {
+            return new PageInform(postRepository.findByContentContaining(keyword, pageable), type, keyword);
+        }
     }
 
-    public Page<PostSummaryInform> searchByContent(String content, Pageable pageable) {
-        return postRepository.findByContentContaining(content, pageable)
-                .map(post -> new PostSummaryInform(post));
-    }
 
     public PostSummaryInform toPostSummaryInform(Long id) {
         return new PostSummaryInform(findById(id));

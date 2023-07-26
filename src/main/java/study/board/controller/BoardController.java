@@ -56,18 +56,14 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public String boardInform(@PathVariable("boardId") Long boardId,
-                              @RequestParam(value = "title", defaultValue = "") String title,
+                              @RequestParam(value = "type", defaultValue = "title") String type,
+                              @RequestParam(value = "keyword", defaultValue = "") String keyword,
                               @PageableDefault(size = 10) Pageable pageable, Model model) {
         BoardInform boardInform = new BoardInform(boardService.findById(boardId));
-
-        Page<PostSummaryInform> page = postService.searchByTitle(title, pageable);
-        List<PostSummaryInform> posts = page.getContent();
+        PageInform pageInform = postService.searchByKeyword(type, keyword, pageable);
 
         model.addAttribute("boardInform", boardInform);
-        model.addAttribute("page", pageable.getPageNumber());
-        model.addAttribute("size", pageable.getPageSize());
-        model.addAttribute("total", page.getTotalPages());
-        model.addAttribute("posts", posts);
+        model.addAttribute("pageInform", pageInform);
 
         return "boards/boardInform";
     }
