@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import study.board.entity.Post;
 
 @Getter @Setter
 public class PostUpdateForm {
@@ -13,6 +14,12 @@ public class PostUpdateForm {
     private String title;
     @NotNull
     private String content;
-    private Long boardId;
+
+    public PostUpdateForm() {}
+
+    public PostUpdateForm(Post post) {
+        title = post.getTitle();
+        content = post.getContent();
+    }
 
 }

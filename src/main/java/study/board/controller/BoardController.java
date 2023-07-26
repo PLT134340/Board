@@ -2,7 +2,6 @@ package study.board.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.common.argumentresolver.Login;
 import study.board.service.BoardService;
 import study.board.service.PostService;
-import study.board.service.UserService;
 import study.board.service.dto.*;
 
 import java.util.List;
@@ -104,6 +102,27 @@ public class BoardController {
         model.addAttribute("postInform", postInform);
 
         return "posts/postInform";
+    }
+
+    @GetMapping("/{boardId}/{postId}/edit")
+    public String modifyPostForm(@PathVariable("boardId") Long boardId,
+                                 @PathVariable("postId") Long postId, Model model) {
+        PostUpdateForm form = new PostUpdateForm(postService.findById(postId));
+
+        model.addAttribute("form", form);
+
+        return "posts/modifyPostForm";
+    }
+
+    @PostMapping("/{boardId}/{postId}/edit")
+    public String modifyPost(@PathVariable("boardId") Long boardId,
+                             @PathVariable("postId") Long postId,
+                             @Valid @ModelAttribute("form") PostUpdateForm form, BindingResult result) {
+        form.setPostId(postId);
+
+        postService.updatePost(form);
+
+        return  "redirect:/boards/{boardId}/{postId}";
     }
 
     @GetMapping("/{boardId}/{postId}/like")

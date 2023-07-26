@@ -58,7 +58,6 @@ public class PostService {
 
     public void updatePost(PostUpdateForm postUpdateForm) {
         Post post = findById(postUpdateForm.getPostId());
-        Board board = boardService.findById(postUpdateForm.getBoardId());
 
         post.updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
     }
