@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.common.argumentresolver.Login;
 import study.board.service.BoardService;
+import study.board.service.CommentService;
 import study.board.service.PostService;
 import study.board.service.dto.*;
 
@@ -23,6 +24,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/create")
     public String createForm(@ModelAttribute("form") BoardCreateForm boardCreateForm) {
@@ -107,7 +109,7 @@ public class BoardController {
     @GetMapping("/{boardId}/{postId}/edit")
     public String modifyPostForm(@PathVariable("boardId") Long boardId,
                                  @PathVariable("postId") Long postId, Model model) {
-        PostUpdateForm form = new PostUpdateForm(postService.findById(postId));
+        PostUpdateForm form = postService.toPostUpdateForm(postId);
 
         model.addAttribute("form", form);
 
@@ -141,15 +143,25 @@ public class BoardController {
     public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                           @ModelAttribute("comment") CommentForm form, @Login UserInform userInform,
                           RedirectAttributes redirectAttributes) {
-        form.setUserId(userInform.getId());
-        postService.saveComment(form);
+        form.setId(userInform.getId(), postId, 0L);
+        commentService.saveComment(form);
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
 
         return "redirect:/boards/{boardId}/{postId}";
     }
+    @PostMapping("/{boardId}/{postId}/{commentId}/recomment")
+    public String recomment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
+                            @PathVariable("commentId") Long commentId, @Login UserInform userInform,
+                            @ModelAttribute("recomment") CommentForm form, RedirectAttributes redirectAttributes) {
+        form.setId(userInform.getId(), postId, commentId);
+        commentService.saveComment(form);
 
+        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute("postId", postId);
 
+        return "redirect:/boards/{boardId}/{postId}";
+    }
 
 }
