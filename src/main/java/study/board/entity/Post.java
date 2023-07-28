@@ -45,4 +45,8 @@ public class Post extends DateEntity {
     public void addLike() {
         like++;
     }
+
+    public void mergeComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

@@ -5,26 +5,23 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div th:object="${postInform}">
-        <table class="table table-striped">
-            <tbody>
-            <tr>
-                <th>#</th>
-                <td th:text="*{id}"></td>
-            </tr>
-            <tr>
-                <th>제목</th>
-                <td th:text="*{title}"></td>
-            </tr>
-            <tr>
-                <th>닉네임</th>
-                <td th:text="*{username}"></td>
-            </tr>
-            <tr>
-                <th>내용</th>
-                <td th:text="*{content}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="container border rounded p-4 mb-3">
+            <div class="row">
+                <img class="col-2" src="https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/8904">
+                <div class="col-7">
+                    <div class="row">
+                        <h4 class="fw-bold" th:text="*{username}">닉네임</h4>
+                        <h6 class="text-secondary" th:text="*{createdDateTime}">작성 시간</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h1 class="fw-bold" th:text="*{title}">제목</h1>
+                <h4 th:text="*{content}">내용</h4>
+            </div>
+<!--            <div class="row"></div>-->
+<!--            <div class="row">공감 버튼</div>-->
+        </div>
         <div class="clearfix mb-1">
             <a href="#" th:href="@{{postId}/like (postId=*{id})}"
                class="btn btn-outline-danger" th:text="*{like}" role="button">좋아요</a>
