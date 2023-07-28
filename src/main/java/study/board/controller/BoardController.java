@@ -14,6 +14,7 @@ import study.board.service.BoardService;
 import study.board.service.CommentService;
 import study.board.service.PostService;
 import study.board.service.dto.*;
+import study.board.service.enumeration.SearchType;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public String boardInform(@PathVariable("boardId") Long boardId,
-                              @RequestParam(value = "type", defaultValue = "title") String type,
+                              @RequestParam(value = "type", defaultValue = "TITLE") SearchType type,
                               @RequestParam(value = "keyword", defaultValue = "") String keyword,
                               @PageableDefault(size = 10) Pageable pageable, Model model) {
         BoardInform boardInform = new BoardInform(boardService.findById(boardId));

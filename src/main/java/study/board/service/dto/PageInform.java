@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import study.board.entity.Post;
+import study.board.service.enumeration.SearchType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,11 +16,11 @@ public class PageInform {
     int total;
     int start;
     int end;
-    String type;
+    SearchType type;
     String keyword;
 
 
-    public PageInform(Page<Post> page, String type, String keyword) {
+    public PageInform(Page<Post> page, SearchType type, String keyword) {
         this.page = page.getNumber();
         this.total = page.getTotalPages();
         this.posts = page.getContent()
