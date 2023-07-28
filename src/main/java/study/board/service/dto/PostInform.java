@@ -25,6 +25,7 @@ public class PostInform {
         like = post.getLike();
         comments = post.getComments()
                 .stream()
+                .filter(comment -> comment.getUpperComment() == null)
                 .map(comment -> new CommentInform(comment))
                 .collect(Collectors.toList());
     }
