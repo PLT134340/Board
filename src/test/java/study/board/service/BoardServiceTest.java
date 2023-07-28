@@ -12,6 +12,10 @@ import study.board.entity.Board;
 import study.board.entity.User;
 import study.board.repository.BoardRepository;
 import study.board.service.dto.BoardCreateForm;
+import study.board.service.dto.BoardInform;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -28,24 +32,36 @@ class BoardServiceTest {
     @Mock
     private UserService userService;
 
+    private User getUser() {
+        User user = new User("kim", "1234");
+        ReflectionTestUtils.setField(user, "id", 1L);
+        return user;
+    }
+
+    private Board getBoard(User user) {
+        Board board = new Board("hello", "world", user);
+        ReflectionTestUtils.setField(board, "id", 1L);
+        return board;
+    }
+
+    private BoardCreateForm getBoardCreateForm() {
+        BoardCreateForm form = new BoardCreateForm();
+        form.setName("hello");
+        form.setUserId(1L);
+        form.setSubtitle("world");
+        return form;
+    }
+
     @Test
     @DisplayName("게시판 생성 성공")
     void createBoardSuccess() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
+        BoardCreateForm form = getBoardCreateForm();
+        Board board = getBoard(user);
 
-        BoardCreateForm form = new BoardCreateForm();
-        form.setName("hello");
-        form.setUserId(user.getId());
-        form.setSubtitle("world");
-
-        Board board = new Board(form.getName(), form.getSubtitle(), user);
-        ReflectionTestUtils.setField(board, "id", 1L);
-
-        given(boardRepository.existsByName(anyString())).willReturn(false);
+        given(boardRepository.existsByName("hello")).willReturn(false);
         given(userService.findById(1L)).willReturn(user);
-        given(userService.findByUsername(anyString())).willReturn(user);
         given(boardRepository.save(any(Board.class))).willReturn(board);
 
         // when
@@ -59,32 +75,89 @@ class BoardServiceTest {
     @DisplayName("게시판 생성 실패")
     void createBoardFail() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        BoardCreateForm form = getBoardCreateForm();
 
-        BoardCreateForm form = new BoardCreateForm();
-        form.setName("hello");
-        form.setUserId(user.getId());
-        form.setSubtitle("world");
-
-        given(userService.findById(1L)).willReturn(user);
-        given(boardRepository.existsByName(anyString())).willReturn(true);
+        given(boardRepository.existsByName("hello")).willReturn(true);
 
         // when
         // then
         assertThatThrownBy(() -> boardService.createBoard(form))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("already exists name");
     }
 
     @Test
-    @DisplayName("이름을 포함하는 리스트 반환")
-    void searchByName() {
+    @DisplayName("id로 조회 성공")
+    void findByIdSuccess() {
         // given
+        User user = getUser();
+        Board board = getBoard(user);
+
+        given(boardRepository.findById(1L)).willReturn(Optional.of(board));
 
         // when
+        Board findBoard = boardService.findById(1L);
 
         // then
+        assertThat(findBoard.getId()).isEqualTo(board.getId());
+    }
+
+    @Test
+    @DisplayName("id로 조회 실패")
+    void findByIdFail() {
+        // given
+        given(boardRepository.findById(1L)).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> boardService.findById(1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no such board");
+    }
+
+    @Test
+    @DisplayName("name으로 조회 성공")
+    void findByNameSuccess() {
+        // given
+        User user = getUser();
+        Board board = getBoard(user);
+
+        given(boardRepository.findByName("hello")).willReturn(Optional.of(board));
+
+        // when
+        Board findBoard = boardService.findByName("hello");
+
+        // then
+        assertThat(findBoard.getId()).isEqualTo(board.getId());
+    }
+
+    @Test
+    @DisplayName("name으로 조회 실패")
+    void findByNameFail() {
+        // given
+        given(boardRepository.findByName("hello")).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> boardService.findByName("hello"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no such board");
+    }
+
+    @Test
+    @DisplayName("이름을 포함하는 게시판 리스트 반환")
+    void searchByName() {
+        // given
+        User user = getUser();
+
+        given(boardRepository.findByNameContaining("kim"))
+                .willReturn(List.of(getBoard(user)));
+
+        // when
+        List<BoardInform> boardInforms = boardService.searchByName("kim");
+
+        // then
+        assertThat(boardInforms.get(0).getId()).isEqualTo(1L);
     }
 
 }
