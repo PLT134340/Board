@@ -38,8 +38,8 @@ class BoardServiceTest {
         return user;
     }
 
-    private Board getBoard(User user) {
-        Board board = new Board("hello", "world", user);
+    private Board getBoard() {
+        Board board = new Board("hello", "world", getUser());
         ReflectionTestUtils.setField(board, "id", 1L);
         return board;
     }
@@ -58,7 +58,7 @@ class BoardServiceTest {
         // given
         User user = getUser();
         BoardCreateForm form = getBoardCreateForm();
-        Board board = getBoard(user);
+        Board board = getBoard();
 
         given(boardRepository.existsByName("hello")).willReturn(false);
         given(userService.findById(1L)).willReturn(user);
@@ -91,7 +91,7 @@ class BoardServiceTest {
     void findByIdSuccess() {
         // given
         User user = getUser();
-        Board board = getBoard(user);
+        Board board = getBoard();
 
         given(boardRepository.findById(1L)).willReturn(Optional.of(board));
 
@@ -120,7 +120,7 @@ class BoardServiceTest {
     void findByNameSuccess() {
         // given
         User user = getUser();
-        Board board = getBoard(user);
+        Board board = getBoard();
 
         given(boardRepository.findByName("hello")).willReturn(Optional.of(board));
 
@@ -151,7 +151,7 @@ class BoardServiceTest {
         User user = getUser();
 
         given(boardRepository.findByNameContaining("kim"))
-                .willReturn(List.of(getBoard(user)));
+                .willReturn(List.of(getBoard()));
 
         // when
         List<BoardInform> boardInforms = boardService.searchByName("kim");
