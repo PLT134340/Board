@@ -1,12 +1,9 @@
 package study.board.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import study.board.entity.Board;
 import study.board.entity.Comment;
 import study.board.entity.Post;
@@ -14,10 +11,12 @@ import study.board.entity.User;
 import study.board.repository.CommentRepository;
 import study.board.repository.PostRepository;
 import study.board.service.dto.*;
+import study.board.service.enumeration.SearchType;
+
+import java.util.List;
 
 @Service
 @Transactional
-@Validated
 @RequiredArgsConstructor
 public class PostService {
 
@@ -39,21 +38,27 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
 
-    public PageInform searchByKeyword(String type, String keyword, Pageable pageable) {
-        if(type.equals("title")) {
+    public PageInform searchByKeyword(SearchType type, String keyword, Pageable pageable) {
+        if(type == SearchType.TITLE) {
             return new PageInform(postRepository.findByTitleContaining(keyword, pageable), type, keyword);
-        } else {
+        } else if (type == SearchType.CONTENT) {
             return new PageInform(postRepository.findByContentContaining(keyword, pageable), type, keyword);
+        } else if (type == SearchType.USERNAME) {
+            return new PageInform(postRepository.findByUser_UsernameContaining(keyword, pageable), type, keyword);
+        } else {
+            throw new IllegalStateException("no such type");
         }
     }
 
-
-    public PostSummaryInform toPostSummaryInform(Long id) {
-        return new PostSummaryInform(findById(id));
-    }
-
     public PostInform toPostInform(Long id) {
-        return new PostInform(findById(id));
+        Post post = findById(id);
+
+        int count = commentRepository.countByPost_Id(id);
+        List<Comment> comments = commentRepository.findAllByPostId(id);
+
+        post.mergeComments(comments);
+
+        return new PostInform(post, count);
     }
 
     public void updatePost(PostUpdateForm postUpdateForm) {
@@ -62,14 +67,12 @@ public class PostService {
         post.updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
     }
 
-    public void addLike(Long id) {
-        findById(id).addLike();
+    public PostUpdateForm toPostUpdateForm(Long id) {
+        return new PostUpdateForm(findById(id));
     }
 
-    public void saveComment(CommentForm form) {
-        User user = userService.findById(form.getUserId());
-        Post post = findById(form.getPostId());
-        commentRepository.save(new Comment(form.getContent(), user, post));
+    public void addLike(Long id) {
+        findById(id).addLike();
     }
 
 }
