@@ -50,7 +50,7 @@ public class BoardController {
     @GetMapping
     public String search(@RequestParam(value = "boardName", required = false, defaultValue = "") String boardName,
                          Model model) {
-        List<BoardListInform> boardInforms = boardService.searchByName(boardName);
+        List<BoardInform> boardInforms = boardService.searchByName(boardName);
         model.addAttribute("boardInforms", boardInforms);
         return "boards/boardLists";
     }

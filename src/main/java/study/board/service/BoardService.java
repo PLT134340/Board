@@ -8,7 +8,6 @@ import study.board.entity.User;
 import study.board.repository.BoardRepository;
 import study.board.service.dto.BoardCreateForm;
 import study.board.service.dto.BoardInform;
-import study.board.service.dto.BoardListInform;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ public class BoardService {
 
     private void validateDuplicateName(String name) {
         if(boardRepository.existsByName(name))
-            throw new IllegalStateException("already exists name");
+            throw new IllegalArgumentException("already exists name");
     }
 
 
@@ -46,20 +45,11 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("no such board"));
     }
 
-/*
-    public List<Board> findAll() {
-        return boardRepository.findAll();
-    }
-*/
-
-    public List<BoardListInform> searchByName(String name) {
+    public List<BoardInform> searchByName(String name) {
         return boardRepository.findByNameContaining(name)
                 .stream()
-                .map(board -> new BoardListInform(board))
+                .map(board -> new BoardInform(board))
                 .collect(Collectors.toList());
     }
 
-    public BoardInform boardInform(String name) {
-        return new BoardInform(findByName(name));
-    }
 }
