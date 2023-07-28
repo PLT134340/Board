@@ -130,9 +130,9 @@ public class BoardController {
 
     @GetMapping("/{boardId}/{postId}/like")
     public String like(@PathVariable("boardId") Long boardId,
-                       @PathVariable("postId") Long postId,
+                       @PathVariable("postId") Long postId, @Login UserInform userInform,
                        RedirectAttributes redirectAttributes) {
-        postService.addLike(postId);
+        postService.addLike(postId, userInform.getId());
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);

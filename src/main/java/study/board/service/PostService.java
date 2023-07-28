@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.board.entity.Board;
-import study.board.entity.Comment;
-import study.board.entity.Post;
-import study.board.entity.User;
+import study.board.entity.*;
 import study.board.repository.CommentRepository;
 import study.board.repository.PostRepository;
 import study.board.service.dto.*;
@@ -71,8 +68,15 @@ public class PostService {
         return new PostUpdateForm(findById(id));
     }
 
-    public void addLike(Long id) {
-        findById(id).addLike();
+    public void addLike(Long postId, Long userId) {
+        User user = userService.findById(userId);
+        Post post = findById(postId);
+
+        if(post.getLike().getUsers().contains(user)) {
+            throw new IllegalArgumentException("already like");
+        }
+
+        findById(postId).getLike().addLike(user);
     }
 
 }

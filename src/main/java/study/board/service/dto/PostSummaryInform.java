@@ -18,7 +18,7 @@ public class PostSummaryInform {
         title = post.getTitle();
         username = post.getUser().getUsername();
         commentCount = post.getComments().size();
-        like = post.getLike();
+        like = post.getLike().getCount();
     }
 
 }

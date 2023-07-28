@@ -27,7 +27,7 @@ public class PostInform {
         createdDateTime = post.getCreatedDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
         username = post.getUser().getUsername();
         content = post.getContent();
-        like = post.getLike();
+        like = post.getLike().getCount();
         commentCount = count;
         comments = post.getComments()
                 .stream()
