@@ -12,6 +12,7 @@ import study.board.entity.User;
 import study.board.repository.UserRepository;
 import study.board.service.dto.UserCreateForm;
 import study.board.service.dto.UserInform;
+import study.board.service.dto.UserLoginForm;
 import study.board.service.dto.UserUpdateForm;
 
 import java.util.List;
@@ -31,17 +32,42 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    private UserCreateForm getUserCreatForm() {
+        UserCreateForm userCreateForm = new UserCreateForm();
+        userCreateForm.setUsername("kim");
+        userCreateForm.setPassword("1234");
+        return userCreateForm;
+    }
+
+    private User getUser() {
+        User user = new User("kim", "1234");
+        ReflectionTestUtils.setField(user, "id", 1L);
+        return user;
+    }
+
+    private UserLoginForm getUserLoginForm() {
+        UserLoginForm userLoginForm = new UserLoginForm();
+        userLoginForm.setUsername("kim");
+        userLoginForm.setPassword("1234");
+        return userLoginForm;
+    }
+
+    private UserUpdateForm getUserUpdateForm() {
+        UserUpdateForm form = new UserUpdateForm();
+        form.setUsername("lee");
+        form.setPassword("1234");
+        return form;
+    }
+
     @Test
     @DisplayName("회원가입 성공")
     void joinSuccess() {
         // given
-        UserCreateForm userCreateForm = new UserCreateForm();
-        userCreateForm.setUsername("kim");
+        UserCreateForm userCreateForm = getUserCreatForm();
 
-        User user = new User(userCreateForm.getUsername());
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
 
-        given(userRepository.existsByUsername(anyString())).willReturn(false);
+        given(userRepository.existsByUsername(user.getUsername())).willReturn(false);
         given(userRepository.save(any(User.class))).willReturn(user);
 
         // when
@@ -55,27 +81,83 @@ class UserServiceTest {
     @DisplayName("닉네임 중복으로 회원가입 실패")
     void joinFail() {
         // given
-        UserCreateForm userCreateForm = new UserCreateForm();
-        userCreateForm.setUsername("kim");
+        UserCreateForm userCreateForm = getUserCreatForm();
 
-        given(userRepository.existsByUsername(anyString()))
+        given(userRepository.existsByUsername("kim"))
                 .willReturn(true);
 
         // when
         // then
         assertThatThrownBy(() -> userService.join(userCreateForm))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("already exists username");
+    }
+
+    @Test
+    @DisplayName("로그인 성공")
+    void loginSuccess() {
+        // given
+
+        UserLoginForm userLoginForm = getUserLoginForm();
+
+        User user = new User("kim", "1234");
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+
+        given(userRepository.findByUsername("kim"))
+                .willReturn(Optional.of(user));
+
+        // when
+        Long userId = userService.login(userLoginForm);
+
+        // then
+        assertThat(userId).isEqualTo(user.getId());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 아이디로 로그인 실패")
+    void LoginFailByNotExistId() {
+        // given
+        UserLoginForm userLoginForm = getUserLoginForm();
+
+        User user = getUser();
+
+        given(userRepository.findByUsername("kim"))
+                .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.login(userLoginForm))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no such user");
+    }
+
+    @Test
+    @DisplayName("일치하지 않는 비밀번호로 로그인 실패")
+    void LoginFailByDifferId() {
+        // given
+        UserLoginForm userLoginForm = getUserLoginForm();
+        userLoginForm.setPassword("2345");
+
+        User user = getUser();
+
+        given(userRepository.findByUsername("kim"))
+                .willReturn(Optional.of(user));
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.login(userLoginForm))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("not match password");
     }
 
     @Test
     @DisplayName("id로 조회 성공")
     void findByIdSuccess() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
 
         // when
         User findUser = userService.findById(user.getId());
@@ -101,10 +183,10 @@ class UserServiceTest {
     @DisplayName("username으로 조회 성공")
     void findByUsernameSuccess() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
 
-        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(user));
+        given(userRepository.findByUsername(user.getUsername()))
+                .willReturn(Optional.of(user));
 
         // when
         User findUser = userService.findByUsername(user.getUsername());
@@ -117,7 +199,8 @@ class UserServiceTest {
     @DisplayName("username으로 조회 실패")
     void findByUsernameFail() {
         // given
-        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
+        given(userRepository.findByUsername(anyString()))
+                .willReturn(Optional.empty());
 
         // when
         // then
@@ -130,8 +213,7 @@ class UserServiceTest {
     @DisplayName("전체 조회 후 dto로 반환")
     void findAll() {
         // given
-        List<User> users = List.of(new User("kim"));
-        ReflectionTestUtils.setField(users.get(0), "id", 1L);
+        List<User> users = List.of(getUser());
 
         given(userRepository.findAll()).willReturn(users);
 
@@ -148,10 +230,9 @@ class UserServiceTest {
     @DisplayName("dto로 반환 성공")
     void toUserInformSuccess() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
 
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
 
         // when
         UserInform userInform = userService.toUserInform(user.getId());
@@ -177,15 +258,13 @@ class UserServiceTest {
     @DisplayName("닉네임 수정 성공")
     void modifySuccess() {
         // given
+        User user = getUser();
 
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        UserUpdateForm form = getUserUpdateForm();
 
-        UserUpdateForm form = new UserUpdateForm(user);
-        form.setUsername("lee");
-
-        given(userRepository.existsByUsername(anyString())).willReturn(user.getUsername().equals(form.getUsername()));
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.existsByUsername(form.getUsername()))
+                .willReturn(user.getUsername().equals(form.getUsername()));
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
 
         // when
         userService.modify(form, user.getId());
@@ -198,19 +277,45 @@ class UserServiceTest {
     @DisplayName("중복으로 닉네임 수정 실패")
     void modifyFail() {
         // given
-        User user = new User("kim");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = getUser();
 
-        UserUpdateForm form = new UserUpdateForm(user);
+        UserUpdateForm form = new UserUpdateForm();
         form.setUsername("kim");
 
-        given(userRepository.existsByUsername(anyString())).willReturn(user.getUsername().equals(form.getUsername()));
+        given(userRepository.existsByUsername(form.getUsername()))
+                .willReturn(user.getUsername().equals(form.getUsername()));
 
         // when
         // then
         assertThatThrownBy(() -> userService.modify(form, user.getId()))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("already exists username");
+    }
+
+    @Test
+    @DisplayName("회원 삭제 성공")
+    void withdrawSuccess() {
+        // given
+        given(userRepository.existsById(1L)).willReturn(true);
+
+        // when
+        userService.withdraw(1L);
+
+        // then
+        verify(userRepository, atLeastOnce()).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("회원 삭제 실패")
+    void withdrawFail() {
+        // given
+        given(userRepository.existsById(1L)).willReturn(false);
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.withdraw(1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no such user");
     }
 
 }

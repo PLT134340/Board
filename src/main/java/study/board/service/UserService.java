@@ -1,7 +1,6 @@
 package study.board.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -29,15 +28,17 @@ public class UserService {
         return user.getId();
     }
 
+    @Transactional(readOnly = true)
     public Long login(UserLoginForm form) {
         validateCorrectPassword(form);
         User user = findByUsername(form.getUsername());
         return user.getId();
     }
 
-    private void validateCorrectPassword(UserLoginForm form) {
+    @Transactional(readOnly = true)
+    public void validateCorrectPassword(UserLoginForm form) {
         if (!findByUsername(form.getUsername()).getPassword().equals(form.getPassword())) {
-            throw new IllegalStateException("not match password");
+            throw new IllegalArgumentException("not match password");
         }
     }
 
@@ -45,7 +46,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void validateDuplicateUsername(String username) {
         if (userRepository.existsByUsername(username))
-            throw new IllegalStateException("already exists username");
+            throw new IllegalArgumentException("already exists username");
     }
 
 
@@ -71,14 +72,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> findAllToUsername() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> user.getUsername())
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public UserInform toUserInform(Long id) {
         return new UserInform(findById(id));
     }
@@ -90,6 +83,10 @@ public class UserService {
     }
 
     public void withdraw(Long id) {
+        if(!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("no such user");
+        }
+
         userRepository.deleteById(id);
     }
 
