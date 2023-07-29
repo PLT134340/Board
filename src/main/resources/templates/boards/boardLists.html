@@ -21,6 +21,16 @@
             </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-end mb-3">
+            <form th:action method="get">
+                <div class="input-group">
+                    <span class="input-group-text">제목</span>
+                    <input class="form-control w-50" type="text" name="boardName" th:value="${boardName}">
+                    <button class="btn btn-outline-secondary" type="submit">검색</button>
+                </div>
+            </form>
+        </div>
+
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

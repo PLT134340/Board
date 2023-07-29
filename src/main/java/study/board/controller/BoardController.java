@@ -51,6 +51,7 @@ public class BoardController {
     public String search(@RequestParam(value = "boardName", required = false, defaultValue = "") String boardName,
                          Model model) {
         List<BoardInform> boardInforms = boardService.searchByName(boardName);
+        model.addAttribute("boardName", boardName);
         model.addAttribute("boardInforms", boardInforms);
         return "boards/boardLists";
     }
@@ -122,7 +123,6 @@ public class BoardController {
                              @PathVariable("postId") Long postId,
                              @Valid @ModelAttribute("form") PostUpdateForm form, BindingResult result) {
         form.setPostId(postId);
-
         postService.updatePost(form);
 
         return  "redirect:/boards/{boardId}/{postId}";
