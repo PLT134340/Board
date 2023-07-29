@@ -8,7 +8,6 @@ import study.board.entity.Post;
 import study.board.entity.User;
 import study.board.repository.CommentRepository;
 import study.board.service.dto.CommentForm;
-import study.board.service.dto.CommentInform;
 
 @Service
 @Transactional
@@ -25,11 +24,11 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalStateException("no such comment"));
     }
 
-    public void saveComment(CommentForm form) {
+    public Comment saveComment(CommentForm form) {
         User user = userService.findById(form.getUserId());
         Post post = postService.findById(form.getPostId());
         Comment comment = commentRepository.findById(form.getCommentId()).orElse(null);
-        commentRepository.save(new Comment(form.getContent(), user, post, comment));
+        return commentRepository.save(new Comment(form.getContent(), user, post, comment));
     }
 
 
