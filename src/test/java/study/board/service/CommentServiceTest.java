@@ -9,11 +9,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.Board;
-import study.board.entity.Comment;
 import study.board.entity.Post;
 import study.board.entity.User;
+import study.board.entity.comment.Comment;
+import study.board.entity.comment.Recomment;
 import study.board.repository.CommentRepository;
+import study.board.repository.RecommentRepository;
 import study.board.service.dto.CommentForm;
+import study.board.service.dto.RecommentForm;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -35,6 +38,8 @@ class CommentServiceTest {
 
     @Mock
     CommentRepository commentRepository;
+    @Mock
+    RecommentRepository recommentRepository;
 
     private User getUser() {
         User user = new User("kim", "1234");
@@ -57,13 +62,13 @@ class CommentServiceTest {
     }
 
     private Comment getComment() {
-        Comment comment = new Comment("hi", getUser(), getPost(), null);
+        Comment comment = new Comment("hi", getUser(), getPost());
         ReflectionTestUtils.setField(comment, "id", 1L);
         return comment;
     }
 
-    private Comment getRecomment() {
-        Comment comment = new Comment("hi", getUser(), getPost(), getComment());
+    private Recomment getRecomment() {
+        Recomment comment = new Recomment("hi", getUser(), getPost(), getComment());
         ReflectionTestUtils.setField(comment, "id", 1L);
         return comment;
     }
@@ -72,9 +77,17 @@ class CommentServiceTest {
         CommentForm commentForm = new CommentForm();
         commentForm.setUserId(1L);
         commentForm.setPostId(1L);
-        commentForm.setCommentId(1L);
         commentForm.setContent("hi");
         return commentForm;
+    }
+
+    private RecommentForm getRecommentForm() {
+        RecommentForm recommentForm = new RecommentForm();
+        recommentForm.setUserId(1L);
+        recommentForm.setPostId(1L);
+        recommentForm.setCommentId(1L);
+        recommentForm.setContent("hi");
+        return recommentForm;
     }
 
     @Test
@@ -110,7 +123,6 @@ class CommentServiceTest {
     void saveComment() {
         // given
         CommentForm commentForm = getCommentForm();
-        commentForm.setCommentId(0L);
 
         User user = getUser();
         Post post = getPost();
@@ -118,7 +130,6 @@ class CommentServiceTest {
 
         given(userService.findById(1L)).willReturn(user);
         given(postService.findById(1L)).willReturn(post);
-        given(commentRepository.findById(0L)).willReturn(Optional.empty());
         given(commentRepository.save(any(Comment.class))).willReturn(comment);
 
         // when
@@ -132,24 +143,24 @@ class CommentServiceTest {
     @DisplayName("대댓글 저장")
     void saveRecomment() {
         // given
-        CommentForm commentForm = getCommentForm();
+        RecommentForm recommentForm = getRecommentForm();
 
         User user = getUser();
         Post post = getPost();
         Comment comment = getComment();
-        Comment recomment = getRecomment();
+        Recomment recomment = getRecomment();
 
         given(userService.findById(1L)).willReturn(user);
         given(postService.findById(1L)).willReturn(post);
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
-        given(commentRepository.save(any(Comment.class))).willReturn(recomment);
+        given(recommentRepository.save(any(Recomment.class))).willReturn(recomment);
 
         // when
-        Comment saveComment = commentService.saveComment(commentForm);
+        Recomment saveRecomment = commentService.saveRecomment(recommentForm);
 
         // then
-        assertThat(saveComment.getId()).isEqualTo(recomment.getId());
-        assertThat(saveComment.getUpperComment().getId()).isEqualTo(comment.getId());
+        assertThat(saveRecomment.getId()).isEqualTo(recomment.getId());
+        assertThat(saveRecomment.getUpperComment().getId()).isEqualTo(comment.getId());
     }
 
 }

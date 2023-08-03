@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.Board;
-import study.board.entity.Comment;
+import study.board.entity.comment.Comment;
 import study.board.entity.Post;
 import study.board.entity.User;
 import study.board.repository.CommentRepository;
@@ -72,7 +72,7 @@ class PostServiceTest {
     }
     
     private Comment getComment() {
-        Comment comment = new Comment("hi", getUser(), getPost(), null);
+        Comment comment = new Comment("hi", getUser(), getPost());
         ReflectionTestUtils.setField(comment, "id", 1L);
         return comment;
     }
