@@ -99,11 +99,12 @@ public class BoardController {
     @GetMapping("/{boardId}/{postId}")
     public String postInform(@PathVariable("boardId") Long boardId,
                              @PathVariable("postId") Long postId,
-                             @ModelAttribute("commentForm") CommentForm form,
-                             Model model) {
+                             @Login UserInform userInform,
+                             @ModelAttribute("commentForm") CommentForm form, Model model) {
         PostInform postInform = postService.toPostInform(postId);
 
         model.addAttribute("postInform", postInform);
+        model.addAttribute("userInform", userInform);
 
         return "posts/postInform";
     }

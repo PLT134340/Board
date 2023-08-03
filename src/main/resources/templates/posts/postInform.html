@@ -27,6 +27,7 @@
                class="btn btn-outline-danger" th:text="*{like}" role="button">좋아요</a>
             <a href="#" class="btn btn-outline-info mx-1" th:text="*{commentCount}">댓글 수</a>
             <a href="#" th:href="@{{postId}/edit (postId=*{id})}"
+               th:if="${userInform.username} == ${postInform.username}"
                class="btn btn-primary float-end" role="button">수정</a>
         </div>
         <hr>
