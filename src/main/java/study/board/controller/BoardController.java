@@ -123,6 +123,10 @@ public class BoardController {
     public String modifyPost(@PathVariable("boardId") Long boardId,
                              @PathVariable("postId") Long postId,
                              @Valid @ModelAttribute("form") PostUpdateForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return "posts/modifyPostForm";
+        }
+
         form.setPostId(postId);
         postService.updatePost(form);
 
@@ -145,7 +149,7 @@ public class BoardController {
     public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                           @ModelAttribute("comment") CommentForm form, @Login UserInform userInform,
                           RedirectAttributes redirectAttributes) {
-        form.setId(userInform.getId(), postId, 0L);
+        form.setId(userInform.getId(), postId);
         commentService.saveComment(form);
 
         redirectAttributes.addAttribute("boardId", boardId);
@@ -156,9 +160,9 @@ public class BoardController {
     @PostMapping("/{boardId}/{postId}/{commentId}/recomment")
     public String recomment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                             @PathVariable("commentId") Long commentId, @Login UserInform userInform,
-                            @ModelAttribute("recomment") CommentForm form, RedirectAttributes redirectAttributes) {
+                            @ModelAttribute("recomment") RecommentForm form, RedirectAttributes redirectAttributes) {
         form.setId(userInform.getId(), postId, commentId);
-        commentService.saveComment(form);
+        commentService.saveRecomment(form);
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);

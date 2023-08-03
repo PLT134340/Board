@@ -5,8 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.*;
+import study.board.entity.comment.Comment;
 import study.board.repository.CommentRepository;
 import study.board.repository.PostRepository;
+import study.board.repository.RecommentRepository;
 import study.board.service.dto.*;
 import study.board.service.enumeration.SearchType;
 
@@ -22,6 +24,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final RecommentRepository recommentRepository;
 
     public Long createPost(PostCreateForm form) {
         Board board = boardService.findById(form.getBoardId());
@@ -50,7 +53,7 @@ public class PostService {
     public PostInform toPostInform(Long id) {
         Post post = findById(id);
 
-        int count = commentRepository.countByPost_Id(id);
+        int count = commentRepository.countByPost_Id(id) + recommentRepository.countByPost_Id(id);
         List<Comment> comments = commentRepository.findAllByPostId(id);
 
         post.mergeComments(comments);

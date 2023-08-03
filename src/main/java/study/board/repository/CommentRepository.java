@@ -3,7 +3,7 @@ package study.board.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import study.board.entity.Comment;
+import study.board.entity.comment.Comment;
 
 import java.util.List;
 

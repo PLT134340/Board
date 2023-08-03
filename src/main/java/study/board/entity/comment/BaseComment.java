@@ -1,17 +1,19 @@
-package study.board.entity;
+package study.board.entity.comment;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
+import study.board.entity.DateEntity;
+import study.board.entity.Post;
+import study.board.entity.User;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends DateEntity {
+public abstract class BaseComment extends DateEntity {
 
     @Id @GeneratedValue
     @Column(name = "comment_id")
@@ -23,16 +25,11 @@ public class Comment extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upper_comment_id")
-    private Comment upperComment;
-    @OneToMany(mappedBy = "upperComment", cascade = CascadeType.PERSIST)
-    private List<Comment> recomments = new ArrayList<>();
 
-    public Comment(String content, User user, Post post, Comment upperComment) {
+    public BaseComment(String content, User user, Post post) {
         this.content = content;
         this.user = user;
         this.post = post;
-        this.upperComment = upperComment;
     }
+
 }

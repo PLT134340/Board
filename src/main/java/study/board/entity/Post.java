@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.board.entity.comment.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
