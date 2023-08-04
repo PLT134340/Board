@@ -25,23 +25,23 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(new LoginArgumentResolver());
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LonginInterceptor())
-                .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns(
-                        "/", "/users/sign-in", "/users/sign-out", "/users/sign-up",
-                        "/css/**", "/*.ico", "/error"
-                );
-
-        registry.addInterceptor(new UserEditInterceptor())
-                .order(2)
-                .addPathPatterns("/users/**")
-                .excludePathPatterns("/users", "/users/sign-in", "/users/sign-out", "/users/sign-up");
-
-        registry.addInterceptor(new PostEditInterceptor(postService))
-                .order(3)
-                .addPathPatterns("/boards/**/edit");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new LonginInterceptor())
+//                .order(1)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(
+//                        "/", "/users/sign-in", "/users/sign-out", "/users/sign-up",
+//                        "/css/**", "/*.ico", "/error"
+//                );
+//
+//        registry.addInterceptor(new UserEditInterceptor())
+//                .order(2)
+//                .addPathPatterns("/users/**")
+//                .excludePathPatterns("/users", "/users/sign-in", "/users/sign-out", "/users/sign-up");
+//
+//        registry.addInterceptor(new PostEditInterceptor(postService))
+//                .order(3)
+//                .addPathPatterns("/boards/**/edit");
+//    }
 }

@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Validated
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public Long join(UserCreateForm form) {
         validateDuplicateUsername(form.getUsername());
@@ -37,7 +38,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void validateCorrectPassword(UserLoginForm form) {
-        if (!findByUsername(form.getUsername()).getPassword().equals(form.getPassword())) {
+        User user = findByUsername(form.getUsername());
+        if (!passwordEncoder.matches(form.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("not match password");
         }
     }
@@ -77,10 +79,17 @@ public class UserService {
     }
 
     public void modify(UserUpdateForm form, Long userId) {
-        validateDuplicateUsername(form.getUsername());
+        validateDuplicateUsernameExcludeSelf(form.getUsername(), userId);
         User user = findById(userId);
-        user.update(form.getUsername(), form.getPassword());
+        user.update(form.getUsername(), passwordEncoder.encode(form.getPassword()));
     }
+
+    @Transactional(readOnly = true)
+    public void validateDuplicateUsernameExcludeSelf(String username, Long id) {
+        if (userRepository.existsByUsername(username) && !findByUsername(username).getId().equals(id))
+            throw new IllegalArgumentException("already exists username");
+    }
+
 
     public void withdraw(Long id) {
         if(!userRepository.existsById(id)) {

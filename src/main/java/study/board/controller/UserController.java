@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import study.board.common.argumentresolver.Login;
 import study.board.service.UserService;
 import study.board.service.dto.UserCreateForm;
 import study.board.service.dto.UserLoginForm;
@@ -89,12 +88,7 @@ public class UserController {
 
 
     @GetMapping("/{userId}/edit")
-    public String modifyForm(@PathVariable("userId") Long userId, @ModelAttribute("form") UserUpdateForm form,
-                             @Login UserInform userInform, RedirectAttributes redirectAttributes) {
-        if (userId != userInform.getId()) {
-            redirectAttributes.addAttribute("userId", userId);
-            return "redirect:/users/{userId}";
-        }
+    public String modifyForm(@PathVariable("userId") Long userId, Model model) {
 
         form.setUsername(userService.findById(userId).getUsername());
         return "users/modifyUserForm";
@@ -111,6 +105,7 @@ public class UserController {
 
         userService.modify(form, userId);
         redirectAttributes.addAttribute("status", true);
+
         return "redirect:/users/{userId}";
 
     }

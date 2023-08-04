@@ -1,4 +1,4 @@
-package study.board.common.argumentresolver;
+package study.board.common.annotation.argumentresolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import study.board.common.annotation.Login;
 import study.board.service.dto.UserInform;
 
 @Slf4j

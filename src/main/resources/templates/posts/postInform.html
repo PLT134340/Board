@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header" />
 <body>
 <div class="container">
@@ -27,12 +28,13 @@
                class="btn btn-outline-danger" th:text="*{like}" role="button">좋아요</a>
             <a href="#" class="btn btn-outline-info mx-1" th:text="*{commentCount}">댓글 수</a>
             <a href="#" th:href="@{{postId}/edit (postId=*{id})}"
-               th:if="${userInform.username} == ${postInform.username}"
+               sec:authorize="isAuthenticated()" th:if="${userInform.username} == ${postInform.username}"
                class="btn btn-primary float-end" role="button">수정</a>
         </div>
         <hr>
-        <form role="form" id="commentForm" th:action="@{{postId}/comment (postId=*{id})}"  method="post">
-            <div class="input-group mb-3" th:object="${commentForm}">
+        <form role="form" id="commentCreateForm" th:action="@{{postId}/comment (postId=*{id})}"
+              sec:authorize="isAuthenticated()" method="post">
+            <div class="input-group mb-3" th:object="${commentCreateForm}">
                 <input type="text" th:field="*{content}" class="form-control" placeholder="댓글">
                 <button type="submit" class="btn btn-outline-secondary">제출</button>
             </div>
@@ -50,7 +52,8 @@
                     <div class="d-flex justify-content-between">
                         <div class="fw-bold" th:text="${comment.username}">닉네임</div>
                         <button class="badge bg-info rounded-pill ms-auto text-decoration-none"
-                            th:id="${comment.id}" onclick="changeRecommentForm(this)">대댓글</button>
+                                sec:authorize="isAuthenticated()" th:id="${comment.id}"
+                                onclick="changeRecommentForm(this)">대댓글</button>
                     </div>
                     <div th:text="${comment.content}">댓글</div>
                 </div>
