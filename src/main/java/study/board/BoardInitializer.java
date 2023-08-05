@@ -36,10 +36,17 @@ public class BoardInitializer implements ApplicationRunner {
         Comment comment1 = new Comment("1", kim, hello);
         Comment comment2 = new Comment("2", lee, hello);
         Comment comment3 = new Comment("3", kim, hello);
+        Recomment comment4 = new Recomment("4", kim, comment1);
+        Recomment comment5 = new Recomment("5", kim, comment1);
+        Recomment comment6 = new Recomment("6", kim, comment1);
 
-        hello.getComments().add(comment1);
-        hello.getComments().add(comment2);
-        hello.getComments().add(comment3);
+        comment1.getRecomments().add(comment4);
+        comment1.getRecomments().add(comment5);
+        comment1.getRecomments().add(comment6);
+
+        commentRepository.save(comment1);
+        commentRepository.save(comment2);
+        commentRepository.save(comment3);
 
         jpa.getPosts().add(hello);
 

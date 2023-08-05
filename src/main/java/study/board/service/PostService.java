@@ -53,8 +53,10 @@ public class PostService {
     public PostInform toPostInform(Long id) {
         Post post = findById(id);
 
-        int count = commentRepository.countByPost_Id(id) + recommentRepository.countByPost_Id(id);
-        List<Comment> comments = commentRepository.findAllByPostId(id);
+        List<Comment> comments = commentService.findAllByPostId(id);
+
+        return new PostInform(post, comments, commentService.getCount(comments));
+    }
 
         post.mergeComments(comments);
 

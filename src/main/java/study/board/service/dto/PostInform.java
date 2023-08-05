@@ -3,6 +3,7 @@ package study.board.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 import study.board.entity.Post;
+import study.board.entity.comment.Comment;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -21,18 +22,18 @@ public class PostInform {
     private List<CommentInform> comments;
     private int like;
 
-    public PostInform(Post post, int count) {
+    public PostInform(Post post, List<Comment> commentList, int count) {
         id = post.getId();
         title = post.getTitle();
         createdDateTime = post.getCreatedDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
         username = post.getUser().getUsername();
         content = post.getContent();
-        like = post.getLike().getCount();
         commentCount = count;
-        comments = post.getComments()
+        comments = commentList
                 .stream()
                 .map(comment -> new CommentInform(comment))
                 .collect(Collectors.toList());
+        like = post.getLike().getCount();
     }
 
 }

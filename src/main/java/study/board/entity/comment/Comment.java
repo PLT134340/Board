@@ -1,8 +1,6 @@
 package study.board.entity.comment;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +15,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseComment {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     @OneToMany(mappedBy = "upperComment", cascade = CascadeType.PERSIST)
     private List<Recomment> recomments = new ArrayList<>();
 
     public Comment(String content, User user, Post post) {
-        super(content, user, post);
+        super(content, user);
+        this.post = post;
     }
 }

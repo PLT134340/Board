@@ -16,6 +16,7 @@ public class Board {
     @Id @GeneratedValue
     @Column(name = "board_id")
     private Long id;
+    @Column(unique = true)
     private String name;
     private String subtitle;
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)

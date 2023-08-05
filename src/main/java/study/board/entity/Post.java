@@ -28,8 +28,6 @@ public class Post extends DateEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "likes_id")
     private Like like;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
 
     public Post(String title, String content, Board board, User user) {
         this.title = title;
@@ -44,7 +42,4 @@ public class Post extends DateEntity {
         this.content = content;
     }
 
-    public void mergeComments(List<Comment> comments) {
-        this.comments = comments;
-    }
 }

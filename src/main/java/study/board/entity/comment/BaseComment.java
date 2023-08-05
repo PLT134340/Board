@@ -22,14 +22,10 @@ public abstract class BaseComment extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
 
-    public BaseComment(String content, User user, Post post) {
+    public BaseComment(String content, User user) {
         this.content = content;
         this.user = user;
-        this.post = post;
     }
 
 }
