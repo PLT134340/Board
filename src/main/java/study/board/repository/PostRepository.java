@@ -7,8 +7,8 @@ import study.board.entity.Post;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findByTitleContaining(String title, Pageable pageable);
-    Page<Post> findByContentContaining(String content, Pageable pageable);
-    Page<Post> findByUser_UsernameContaining(String username, Pageable pageable);
+    Page<Post> findByBoard_IdAndTitleContaining(Long boardId, String title, Pageable pageable);
+    Page<Post> findByBoard_IdAndContentContaining(Long boardId, String content, Pageable pageable);
+    Page<Post> findByBoard_IdAndUser_UsernameContaining(Long boardId, String username, Pageable pageable);
 
 }
