@@ -13,10 +13,7 @@ import study.board.repository.BoardRepository;
 import study.board.repository.CommentRepository;
 import study.board.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Component
+//@Component
 @RequiredArgsConstructor
 public class BoardInitializer implements ApplicationRunner {
 

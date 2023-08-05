@@ -47,7 +47,6 @@ class BoardServiceTest {
     private BoardCreateForm getBoardCreateForm() {
         BoardCreateForm form = new BoardCreateForm();
         form.setName("hello");
-        form.setUserId(1L);
         form.setSubtitle("world");
         return form;
     }
@@ -65,7 +64,8 @@ class BoardServiceTest {
         given(boardRepository.save(any(Board.class))).willReturn(board);
 
         // when
-        Long boardId = boardService.createBoard(form);
+        Long userId = 1L;
+        Long boardId = boardService.createBoard(form, userId);
 
         // then
         assertThat(boardId).isEqualTo(board.getId());
@@ -81,7 +81,8 @@ class BoardServiceTest {
 
         // when
         // then
-        assertThatThrownBy(() -> boardService.createBoard(form))
+        Long userId = 1L;
+        assertThatThrownBy(() -> boardService.createBoard(form, userId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("already exists name");
     }

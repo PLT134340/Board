@@ -14,10 +14,12 @@ import study.board.entity.User;
 import study.board.entity.comment.Comment;
 import study.board.entity.comment.Recomment;
 import study.board.repository.CommentRepository;
+import study.board.repository.PostRepository;
 import study.board.repository.RecommentRepository;
-import study.board.service.dto.CommentForm;
-import study.board.service.dto.RecommentForm;
+import study.board.service.dto.CommentCreateForm;
+import study.board.service.dto.RecommentCreateForm;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -36,6 +38,8 @@ class CommentServiceTest {
     @Mock
     private PostService postService;
 
+    @Mock
+    private PostRepository postRepository;
     @Mock
     CommentRepository commentRepository;
     @Mock
@@ -68,26 +72,21 @@ class CommentServiceTest {
     }
 
     private Recomment getRecomment() {
-        Recomment comment = new Recomment("hi", getUser(), getPost(), getComment());
+        Recomment comment = new Recomment("hi", getUser(), getComment());
         ReflectionTestUtils.setField(comment, "id", 1L);
         return comment;
     }
 
-    private CommentForm getCommentForm() {
-        CommentForm commentForm = new CommentForm();
-        commentForm.setUserId(1L);
-        commentForm.setPostId(1L);
-        commentForm.setContent("hi");
-        return commentForm;
+    private CommentCreateForm getCommentForm() {
+        CommentCreateForm commentCreateForm = new CommentCreateForm();
+        commentCreateForm.setContent("hi");
+        return commentCreateForm;
     }
 
-    private RecommentForm getRecommentForm() {
-        RecommentForm recommentForm = new RecommentForm();
-        recommentForm.setUserId(1L);
-        recommentForm.setPostId(1L);
-        recommentForm.setCommentId(1L);
-        recommentForm.setContent("hi");
-        return recommentForm;
+    private RecommentCreateForm getRecommentForm() {
+        RecommentCreateForm recommentCreateForm = new RecommentCreateForm();
+        recommentCreateForm.setContent("hi");
+        return recommentCreateForm;
     }
 
     @Test
@@ -122,18 +121,20 @@ class CommentServiceTest {
     @DisplayName("댓글 저장")
     void saveComment() {
         // given
-        CommentForm commentForm = getCommentForm();
+        CommentCreateForm commentCreateForm = getCommentForm();
 
         User user = getUser();
         Post post = getPost();
         Comment comment = getComment();
 
         given(userService.findById(1L)).willReturn(user);
-        given(postService.findById(1L)).willReturn(post);
+        given(postRepository.findById(1L)).willReturn(Optional.of(post));
         given(commentRepository.save(any(Comment.class))).willReturn(comment);
 
         // when
-        Comment saveComment = commentService.saveComment(commentForm);
+        Long userId = 1L;
+        Long postId = 1L;
+        Comment saveComment = commentService.saveComment(commentCreateForm, userId, postId);
 
         // then
         assertThat(saveComment.getId()).isEqualTo(comment.getId());
@@ -143,7 +144,7 @@ class CommentServiceTest {
     @DisplayName("대댓글 저장")
     void saveRecomment() {
         // given
-        RecommentForm recommentForm = getRecommentForm();
+        RecommentCreateForm recommentCreateForm = getRecommentForm();
 
         User user = getUser();
         Post post = getPost();
@@ -151,12 +152,13 @@ class CommentServiceTest {
         Recomment recomment = getRecomment();
 
         given(userService.findById(1L)).willReturn(user);
-        given(postService.findById(1L)).willReturn(post);
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
         given(recommentRepository.save(any(Recomment.class))).willReturn(recomment);
 
         // when
-        Recomment saveRecomment = commentService.saveRecomment(recommentForm);
+        Long userId = 1L;
+        Long commentId = 1L;
+        Recomment saveRecomment = commentService.saveRecomment(recommentCreateForm, userId, commentId);
 
         // then
         assertThat(saveRecomment.getId()).isEqualTo(recomment.getId());

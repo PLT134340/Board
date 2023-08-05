@@ -58,8 +58,6 @@ class PostServiceTest {
         PostCreateForm postCreateForm = new PostCreateForm();
         postCreateForm.setTitle("JPA");
         postCreateForm.setContent("JAVA Persistence API");
-        postCreateForm.setBoardId(1L);
-        postCreateForm.setUserId(1L);
         return postCreateForm;
     }
 
@@ -101,7 +99,9 @@ class PostServiceTest {
         given(postRepository.save(any(Post.class))).willReturn(post);
 
         // when
-        Long postId = postService.createPost(postCreateForm);
+        Long boardId = 1L;
+        Long userId = 1L;
+        Long postId = postService.createPost(postCreateForm, boardId, userId);
 
         // then
         assertThat(postId).isEqualTo(post.getId());
