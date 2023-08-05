@@ -90,7 +90,9 @@ public class UserController {
     @GetMapping("/{userId}/edit")
     public String modifyForm(@PathVariable("userId") Long userId, Model model) {
 
-        form.setUsername(userService.findById(userId).getUsername());
+        UserUpdateForm form = userService.toUserUpdateForm(userId);
+        model.addAttribute("form", form);
+
         return "users/modifyUserForm";
     }
 
@@ -107,7 +109,6 @@ public class UserController {
         redirectAttributes.addAttribute("status", true);
 
         return "redirect:/users/{userId}";
-
     }
 
     @GetMapping("/{userId}/delete")

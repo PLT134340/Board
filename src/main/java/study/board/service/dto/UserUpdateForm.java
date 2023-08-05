@@ -13,4 +13,10 @@ public class UserUpdateForm {
     @NotBlank
     private String password;
 
+    public UserUpdateForm() {
+    }
+
+    public UserUpdateForm(User user) {
+        username = user.getUsername();
+    }
 }

@@ -1,14 +1,13 @@
 package study.board.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.*;
 import study.board.entity.comment.Comment;
-import study.board.repository.CommentRepository;
 import study.board.repository.PostRepository;
-import study.board.repository.RecommentRepository;
 import study.board.service.dto.*;
 import study.board.service.enumeration.SearchType;
 
@@ -21,14 +20,14 @@ public class PostService {
 
     private final UserService userService;
     private final BoardService boardService;
+    private final CommentService commentService;
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final RecommentRepository recommentRepository;
 
-    public Long createPost(PostCreateForm form) {
-        Board board = boardService.findById(form.getBoardId());
-        User user = userService.findById(form.getUserId());
+
+    public Long createPost(PostCreateForm form, Long boardId, Long userId) {
+        Board board = boardService.findById(boardId);
+        User user = userService.findById(userId);
 
         return postRepository.save(new Post(form.getTitle(), form.getContent(), board, user)).getId();
     }
@@ -38,16 +37,18 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
 
-    public PageInform searchByKeyword(SearchType type, String keyword, Pageable pageable) {
+    public PageInform searchByKeyword(SearchType type, String keyword, Pageable pageable, Long boardId) {
+        Page<Post> page;
         if(type == SearchType.TITLE) {
-            return new PageInform(postRepository.findByTitleContaining(keyword, pageable), type, keyword);
+            page = postRepository.findByBoard_IdAndTitleContaining(boardId, keyword, pageable);
         } else if (type == SearchType.CONTENT) {
-            return new PageInform(postRepository.findByContentContaining(keyword, pageable), type, keyword);
+            page = postRepository.findByBoard_IdAndContentContaining(boardId, keyword, pageable);
         } else if (type == SearchType.USERNAME) {
-            return new PageInform(postRepository.findByUser_UsernameContaining(keyword, pageable), type, keyword);
+            page = postRepository.findByBoard_IdAndUser_UsernameContaining(boardId, keyword, pageable);
         } else {
             throw new IllegalStateException("no such type");
         }
+        return new PageInform(page, type, keyword);
     }
 
     public PostInform toPostInform(Long id) {
@@ -58,9 +59,12 @@ public class PostService {
         return new PostInform(post, comments, commentService.getCount(comments));
     }
 
-        post.mergeComments(comments);
+    public PostInform toPostSummaryInform(Long id) {
+        Post post = findById(id);
 
-        return new PostInform(post, count);
+        List<Comment> comments = commentService.findAllByPostId(id);
+
+        return new PostInform(post, comments, commentService.getCount(comments));
     }
 
     public void updatePost(PostUpdateForm postUpdateForm) {

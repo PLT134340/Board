@@ -39,8 +39,8 @@
                 <button type="submit" class="btn btn-outline-secondary">제출</button>
             </div>
         </form>
-        <form class="d-none" id="recommentForm" role="form" method="post" action="#">
-            <div class="input-group mb-3" th:object="${commentForm}">
+        <form class="d-none" id="recommentCreateForm" role="form" method="post" th:action>
+            <div class="input-group mb-3" th:object="${commentCreateForm}">
                 <input id="recommentFormInput" type="text" th:field="*{content}" class="form-control" placeholder="대댓글"
                        onblur="changeCommentForm()">
                 <button type="button" class="btn btn-outline-secondary" onmousedown="submitForm()">제출</button>
@@ -73,8 +73,8 @@
 </div> <!-- /container -->
 <script th:inline="javascript">
     function changeRecommentForm(elem) {
-        let comment = document.getElementById("commentForm");
-        let recomment = document.getElementById("recommentForm");
+        let comment = document.getElementById("commentCreateForm");
+        let recomment = document.getElementById("recommentCreateForm");
         let input = document.getElementById("recommentFormInput");
         let postId = [[${postInform.id}]];
         let commentId = elem.id;
@@ -88,15 +88,15 @@
     }
 
     function changeCommentForm() {
-        let comment = document.getElementById("commentForm");
-        let recomment = document.getElementById("recommentForm");
+        let comment = document.getElementById("commentCreateForm");
+        let recomment = document.getElementById("recommentCreateForm");
 
         comment.classList.remove("d-none");
         recomment.classList.add("d-none");
     }
 
     function submitForm() {
-        let recomment = document.getElementById("recommentForm");
+        let recomment = document.getElementById("recommentCreateForm");
         recomment.submit();
     }
 

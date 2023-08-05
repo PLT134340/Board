@@ -39,8 +39,7 @@ public class BoardController {
             return "boards/createBoardForm";
         }
 
-        form.setUserId(userInform.getId());
-        Long boardId = boardService.createBoard(form);
+        Long boardId = boardService.createBoard(form, userInform.getId());
 
         redirectAttributes.addAttribute("boardId", boardId);
 
@@ -61,8 +60,8 @@ public class BoardController {
                               @RequestParam(value = "type", defaultValue = "TITLE") SearchType type,
                               @RequestParam(value = "keyword", defaultValue = "") String keyword,
                               @PageableDefault(size = 10) Pageable pageable, Model model) {
-        BoardInform boardInform = new BoardInform(boardService.findById(boardId));
-        PageInform pageInform = postService.searchByKeyword(type, keyword, pageable);
+        BoardInform boardInform = boardService.toBoardInform(boardId);
+        PageInform pageInform = postService.searchByKeyword(type, keyword, pageable, boardId);
 
         model.addAttribute("boardInform", boardInform);
         model.addAttribute("pageInform", pageInform);
@@ -85,9 +84,7 @@ public class BoardController {
             return "posts/createPostForm";
         }
 
-        form.setUserId(userInform.getId());
-        form.setBoardId(boardId);
-        Long postId = postService.createPost(form);
+        Long postId = postService.createPost(form, boardId, userInform.getId());
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
@@ -149,14 +146,14 @@ public class BoardController {
     public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                           @ModelAttribute("comment") CommentCreateForm form, @AuthUser UserInform userInform,
                           RedirectAttributes redirectAttributes) {
-        form.setId(userInform.getId(), postId);
-        commentService.saveComment(form);
+        commentService.saveComment(form, userInform.getId(), postId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
 
         return "redirect:/boards/{boardId}/{postId}";
     }
+
     @PostMapping("/{boardId}/{postId}/{commentId}/recomment")
     public String recomment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                             @PathVariable("commentId") Long commentId, @AuthUser UserInform userInform,

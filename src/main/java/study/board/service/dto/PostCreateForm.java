@@ -12,7 +12,5 @@ public class PostCreateForm {
     private String title;
     @NotNull
     private String content;
-    private Long boardId;
-    private Long userId;
 
 }

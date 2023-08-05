@@ -3,7 +3,6 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
 import study.board.service.dto.UserCreateForm;
@@ -76,6 +75,10 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserInform toUserInform(Long id) {
         return new UserInform(findById(id));
+    }
+
+    public UserUpdateForm toUserUpdateForm(Long id) {
+        return new UserUpdateForm(findById(id));
     }
 
     public void modify(UserUpdateForm form, Long userId) {

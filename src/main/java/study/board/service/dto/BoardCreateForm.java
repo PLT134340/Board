@@ -11,6 +11,5 @@ public class BoardCreateForm {
     private String name;
     @NotBlank
     private String subtitle;
-    private Long userId;
 
 }
