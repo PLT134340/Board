@@ -8,9 +8,12 @@ import study.board.entity.Post;
 import study.board.entity.User;
 import study.board.entity.comment.Recomment;
 import study.board.repository.CommentRepository;
+import study.board.repository.PostRepository;
 import study.board.repository.RecommentRepository;
-import study.board.service.dto.CommentForm;
-import study.board.service.dto.RecommentForm;
+import study.board.service.dto.CommentCreateForm;
+import study.board.service.dto.RecommentCreateForm;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -18,8 +21,8 @@ import study.board.service.dto.RecommentForm;
 public class CommentService {
 
     private final UserService userService;
-    private final PostService postService;
 
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final RecommentRepository recommentRepository;
 
@@ -28,19 +31,27 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalStateException("no such comment"));
     }
 
-    public Comment saveComment(CommentForm form) {
-        User user = userService.findById(form.getUserId());
-        Post post = postService.findById(form.getPostId());
+    public List<Comment> findAllByPostId(Long postId) {
+        return commentRepository.findAllByPostId(postId);
+    }
+
+    public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
+        User user = userService.findById(userId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("no such post"));
 
         return commentRepository.save(new Comment(form.getContent(), user, post));
     }
 
-    public Recomment saveRecomment(RecommentForm form) {
-        User user = userService.findById(form.getUserId());
-        Post post = postService.findById(form.getPostId());
-        Comment comment = findById(form.getCommentId());
+    public Recomment saveRecomment(RecommentCreateForm form, Long userId, Long commentId) {
+        User user = userService.findById(userId);
+        Comment comment = findById(commentId);
 
-        return recommentRepository.save(new Recomment(form.getContent(), user, post, comment));
+        return recommentRepository.save(new Recomment(form.getContent(), user, comment));
     }
 
+    public int getCount(List<Comment> comments) {
+        return comments.size() + comments.stream()
+                .mapToInt(comment -> comment.getRecomments().size())
+                .sum();
+    }
 }

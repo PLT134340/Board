@@ -2,13 +2,15 @@ package study.board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import study.board.entity.Board;
-import study.board.entity.Comment;
+import study.board.entity.comment.Comment;
 import study.board.entity.Post;
 import study.board.entity.User;
+import study.board.entity.comment.Recomment;
 import study.board.repository.BoardRepository;
-import study.board.repository.PostRepository;
+import study.board.repository.CommentRepository;
 import study.board.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -20,7 +22,8 @@ public class BoardInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {

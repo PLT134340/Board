@@ -21,9 +21,9 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Long createBoard(BoardCreateForm form) {
+    public Long createBoard(BoardCreateForm form, Long userId) {
         validateDuplicateName(form.getName());
-        User user = userService.findById(form.getUserId());
+        User user = userService.findById(userId);
         return boardRepository
                 .save(new Board(form.getName(), form.getSubtitle(), user))
                 .getId();
@@ -50,6 +50,10 @@ public class BoardService {
                 .stream()
                 .map(board -> new BoardInform(board))
                 .collect(Collectors.toList());
+    }
+
+    public BoardInform toBoardInform(Long id) {
+        return new BoardInform(findById(id));
     }
 
 }

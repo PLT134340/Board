@@ -1,7 +1,5 @@
 package study.board.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -53,30 +51,6 @@ public class UserController {
     @GetMapping("/sign-in")
     public String loginForm(@ModelAttribute("form") UserLoginForm form) {
         return "users/loginForm";
-    }
-
-    @PostMapping("/sign-in")
-    public String login(@Valid @ModelAttribute("form") UserLoginForm form, BindingResult result,
-                        @RequestParam(defaultValue = "/") String redirectURL,
-                        HttpServletRequest request) {
-        if(result.hasErrors()) {
-            return "users/loginForm";
-        }
-
-        Long userId = userService.login(form);
-        UserInform userInform = userService.toUserInform(userId);
-
-        HttpSession session = request.getSession();
-        session.setAttribute("userInform", userInform);
-
-        return "redirect:" + redirectURL;
-    }
-
-    @GetMapping("/sign-out")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        session.invalidate();
-        return "redirect:/";
     }
 
     @GetMapping("/{userId}")

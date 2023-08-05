@@ -1,15 +1,10 @@
 package study.board.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import study.board.common.argumentresolver.LoginArgumentResolver;
-import study.board.common.interceptor.LonginInterceptor;
-import study.board.common.interceptor.PostEditInterceptor;
-import study.board.common.interceptor.UserEditInterceptor;
+import study.board.common.annotation.argumentresolver.LoginArgumentResolver;
 import study.board.service.PostService;
 
 import java.util.List;

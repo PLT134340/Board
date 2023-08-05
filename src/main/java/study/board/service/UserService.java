@@ -1,6 +1,7 @@
 package study.board.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.User;
@@ -24,7 +25,7 @@ public class UserService {
 
     public Long join(UserCreateForm form) {
         validateDuplicateUsername(form.getUsername());
-        User user = userRepository.save(new User(form.getUsername(), form.getPassword()));
+        User user = userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
         return user.getId();
     }
 
