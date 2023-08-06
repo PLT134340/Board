@@ -81,11 +81,11 @@ public class PostService {
         User user = userService.findById(userId);
         Post post = findById(postId);
 
-        if(post.getLike().getUsers().contains(user)) {
+        if(post.getUsers().contains(user)) {
             throw new IllegalArgumentException("already like");
         }
 
-        findById(postId).getLike().addLike(user);
+        findById(postId).addLike(user);
     }
 
 }

@@ -1,16 +1,13 @@
 package study.board.entity.comment;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.board.entity.Post;
 import study.board.entity.User;
 
 @Entity
+@DiscriminatorValue("recomment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recomment extends BaseComment {

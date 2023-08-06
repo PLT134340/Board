@@ -25,21 +25,29 @@ public class Post extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "likes_id")
-    private Like like;
+    private Integer likeCount;
+    @ManyToMany
+    @JoinTable(name = "post_user",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users = new ArrayList<>();
 
     public Post(String title, String content, Board board, User user) {
         this.title = title;
         this.content = content;
         this.board = board;
         this.user = user;
-        this.like = new Like(this);
+        this.likeCount = 0;
     }
 
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void addLike(User user) {
+        users.add(user);
+        likeCount++;
     }
 
 }

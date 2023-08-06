@@ -44,10 +44,6 @@ public class BoardInitializer implements ApplicationRunner {
         comment1.getRecomments().add(comment5);
         comment1.getRecomments().add(comment6);
 
-        commentRepository.save(comment1);
-        commentRepository.save(comment2);
-        commentRepository.save(comment3);
-
         jpa.getPosts().add(hello);
 
         for (int i = 0; i < 200; i++) {
@@ -59,6 +55,9 @@ public class BoardInitializer implements ApplicationRunner {
         userRepository.save(lee);
         boardRepository.save(jpa);
         boardRepository.save(toby);
+        commentRepository.save(comment1);
+        commentRepository.save(comment2);
+        commentRepository.save(comment3);
     }
 
 }

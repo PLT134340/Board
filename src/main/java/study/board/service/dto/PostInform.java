@@ -33,7 +33,7 @@ public class PostInform {
                 .stream()
                 .map(comment -> new CommentInform(comment))
                 .collect(Collectors.toList());
-        like = post.getLike().getCount();
+        like = post.getLikeCount();
     }
 
 }
