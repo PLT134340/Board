@@ -1,9 +1,10 @@
-package study.board.service.dto;
+package study.board.service.dto.board;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import study.board.entity.Post;
+import study.board.service.dto.post.PostSummaryInform;
 import study.board.service.enumeration.SearchType;
 
 import java.util.List;

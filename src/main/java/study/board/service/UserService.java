@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
-import study.board.service.dto.UserCreateForm;
-import study.board.service.dto.UserLoginForm;
-import study.board.service.dto.UserUpdateForm;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserCreateForm;
+import study.board.service.dto.user.UserLoginForm;
+import study.board.service.dto.user.UserUpdateForm;
+import study.board.service.dto.user.UserInform;
 
 import java.util.List;
 import java.util.stream.Collectors;

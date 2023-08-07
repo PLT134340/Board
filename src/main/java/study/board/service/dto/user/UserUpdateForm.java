@@ -1,4 +1,4 @@
-package study.board.service.dto;
+package study.board.service.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

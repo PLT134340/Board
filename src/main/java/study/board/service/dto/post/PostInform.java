@@ -1,9 +1,10 @@
-package study.board.service.dto;
+package study.board.service.dto.post;
 
 import lombok.Getter;
 import lombok.Setter;
 import study.board.entity.Post;
 import study.board.entity.comment.Comment;
+import study.board.service.dto.comment.CommentInform;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;

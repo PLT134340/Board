@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserInform;
 
 import java.util.Map;
 

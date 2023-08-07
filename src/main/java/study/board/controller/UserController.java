@@ -8,10 +8,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.service.UserService;
-import study.board.service.dto.UserCreateForm;
-import study.board.service.dto.UserLoginForm;
-import study.board.service.dto.UserUpdateForm;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserCreateForm;
+import study.board.service.dto.user.UserLoginForm;
+import study.board.service.dto.user.UserUpdateForm;
+import study.board.service.dto.user.UserInform;
 
 import java.util.List;
 

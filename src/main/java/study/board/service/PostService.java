@@ -9,7 +9,12 @@ import study.board.entity.*;
 import study.board.entity.comment.Comment;
 import study.board.entity.comment.Recomment;
 import study.board.repository.PostRepository;
-import study.board.service.dto.*;
+import study.board.service.dto.board.PageInform;
+import study.board.service.dto.comment.CommentCreateForm;
+import study.board.service.dto.comment.RecommentCreateForm;
+import study.board.service.dto.post.PostCreateForm;
+import study.board.service.dto.post.PostInform;
+import study.board.service.dto.post.PostUpdateForm;
 import study.board.service.enumeration.SearchType;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import study.board.common.annotation.Login;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserInform;
 
 @Slf4j
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {

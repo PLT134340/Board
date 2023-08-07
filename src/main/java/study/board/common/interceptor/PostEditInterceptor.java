@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 import study.board.service.PostService;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserInform;
 
 import java.util.Map;
 

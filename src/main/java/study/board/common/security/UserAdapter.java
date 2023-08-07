@@ -3,7 +3,7 @@ package study.board.common.security;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import study.board.entity.User;
-import study.board.service.dto.UserInform;
+import study.board.service.dto.user.UserInform;
 
 import java.util.List;
 

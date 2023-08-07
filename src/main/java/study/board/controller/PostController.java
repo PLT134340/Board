@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.common.annotation.AuthUser;
 import study.board.service.PostService;
-import study.board.service.dto.*;
+import study.board.service.dto.comment.CommentCreateForm;
+import study.board.service.dto.comment.RecommentCreateForm;
+import study.board.service.dto.post.PostInform;
+import study.board.service.dto.post.PostUpdateForm;
+import study.board.service.dto.user.UserInform;
 
 @Controller
 @RequestMapping("/boards/{boardId}/{postId}")

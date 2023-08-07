@@ -1,4 +1,4 @@
-package study.board.service.dto;
+package study.board.service.dto.post;
 
 import lombok.Getter;
 import lombok.Setter;
