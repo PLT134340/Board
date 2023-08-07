@@ -12,7 +12,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.common.annotation.AuthUser;
 import study.board.service.BoardService;
 import study.board.service.PostService;
-import study.board.service.dto.*;
+import study.board.service.dto.board.BoardCreateForm;
+import study.board.service.dto.board.BoardInform;
+import study.board.service.dto.board.PageInform;
+import study.board.service.dto.post.PostCreateForm;
+import study.board.service.dto.user.UserInform;
 import study.board.service.enumeration.SearchType;
 
 import java.util.List;

@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.Board;
 import study.board.entity.User;
 import study.board.repository.BoardRepository;
-import study.board.service.dto.BoardCreateForm;
-import study.board.service.dto.BoardInform;
+import study.board.service.dto.board.BoardCreateForm;
+import study.board.service.dto.board.BoardInform;
 
 import java.util.List;
 import java.util.stream.Collectors;

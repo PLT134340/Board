@@ -1,11 +1,8 @@
-package study.board.service.dto;
+package study.board.service.dto.board;
 
 import lombok.Getter;
 import lombok.Setter;
 import study.board.entity.Board;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 public class BoardInform {
