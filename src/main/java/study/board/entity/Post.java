@@ -26,6 +26,7 @@ public class Post extends DateEntity {
     @JoinColumn(name = "user_id")
     private User user;
     private Integer likeCount;
+    private Integer commentCount;
     @ManyToMany
     @JoinTable(name = "post_user",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -38,6 +39,7 @@ public class Post extends DateEntity {
         this.board = board;
         this.user = user;
         this.likeCount = 0;
+        this.commentCount = 0;
     }
 
     public void updatePost(String title, String content) {
@@ -48,6 +50,10 @@ public class Post extends DateEntity {
     public void addLike(User user) {
         users.add(user);
         likeCount++;
+    }
+
+    public void addComment() {
+        commentCount++;
     }
 
 }

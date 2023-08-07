@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.*;
 import study.board.entity.comment.Comment;
+import study.board.entity.comment.Recomment;
 import study.board.repository.PostRepository;
 import study.board.service.dto.*;
 import study.board.service.enumeration.SearchType;
@@ -56,15 +57,7 @@ public class PostService {
 
         List<Comment> comments = commentService.findAllByPostId(id);
 
-        return new PostInform(post, comments, commentService.getCount(comments));
-    }
-
-    public PostInform toPostSummaryInform(Long id) {
-        Post post = findById(id);
-
-        List<Comment> comments = commentService.findAllByPostId(id);
-
-        return new PostInform(post, comments, commentService.getCount(comments));
+        return new PostInform(post, comments);
     }
 
     public void updatePost(PostUpdateForm postUpdateForm) {
@@ -86,6 +79,25 @@ public class PostService {
         }
 
         findById(postId).addLike(user);
+    }
+
+    public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
+        User user = userService.findById(userId);
+        Post post = findById(postId);
+
+        post.addComment();
+
+        return commentService.saveComment(form.getContent(), user, post);
+    }
+
+    public Recomment saveRecomment(RecommentCreateForm form, Long userId, Long postId, Long commentId) {
+        User user = userService.findById(userId);
+        Post post = findById(postId);
+        Comment comment = commentService.findById(commentId);
+
+        post.addComment();
+
+        return commentService.saveRecomment(form.getContent(), user, comment);
     }
 
 }

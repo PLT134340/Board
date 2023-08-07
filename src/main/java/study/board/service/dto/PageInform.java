@@ -19,7 +19,6 @@ public class PageInform {
     SearchType type;
     String keyword;
 
-
     public PageInform(Page<Post> page, SearchType type, String keyword) {
         this.page = page.getNumber();
         this.total = page.getTotalPages();

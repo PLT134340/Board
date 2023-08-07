@@ -25,7 +25,6 @@ public class BoardController {
 
     private final BoardService boardService;
     private final PostService postService;
-    private final CommentService commentService;
 
     @GetMapping("/create")
     public String createForm(@ModelAttribute("form") BoardCreateForm boardCreateForm) {
@@ -146,7 +145,7 @@ public class BoardController {
     public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                           @ModelAttribute("comment") CommentCreateForm form, @AuthUser UserInform userInform,
                           RedirectAttributes redirectAttributes) {
-        commentService.saveComment(form, userInform.getId(), postId);
+        postService.saveComment(form, userInform.getId(), postId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
@@ -158,7 +157,7 @@ public class BoardController {
     public String recomment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                             @PathVariable("commentId") Long commentId, @AuthUser UserInform userInform,
                             @ModelAttribute("recomment") RecommentCreateForm form, RedirectAttributes redirectAttributes) {
-        commentService.saveRecomment(form, userInform.getId(), commentId);
+        postService.saveRecomment(form, userInform.getId(), postId, commentId);
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);

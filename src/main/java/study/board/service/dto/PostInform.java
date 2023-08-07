@@ -22,13 +22,13 @@ public class PostInform {
     private List<CommentInform> comments;
     private int like;
 
-    public PostInform(Post post, List<Comment> commentList, int count) {
+    public PostInform(Post post, List<Comment> commentList) {
         id = post.getId();
         title = post.getTitle();
         createdDateTime = post.getCreatedDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
         username = post.getUser().getUsername();
         content = post.getContent();
-        commentCount = count;
+        commentCount = post.getCommentCount();
         comments = commentList
                 .stream()
                 .map(comment -> new CommentInform(comment))

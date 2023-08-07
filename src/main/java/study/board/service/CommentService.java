@@ -20,9 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final UserService userService;
-
-    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final RecommentRepository recommentRepository;
 
@@ -35,23 +32,12 @@ public class CommentService {
         return commentRepository.findAllByPostId(postId);
     }
 
-    public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
-        User user = userService.findById(userId);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("no such post"));
-
-        return commentRepository.save(new Comment(form.getContent(), user, post));
+    public Comment saveComment(String content, User user, Post post) {
+        return commentRepository.save(new Comment(content, user, post));
     }
 
-    public Recomment saveRecomment(RecommentCreateForm form, Long userId, Long commentId) {
-        User user = userService.findById(userId);
-        Comment comment = findById(commentId);
-
-        return recommentRepository.save(new Recomment(form.getContent(), user, comment));
+    public Recomment saveRecomment(String content, User user, Comment comment) {
+        return recommentRepository.save(new Recomment(content, user, comment));
     }
 
-    public int getCount(List<Comment> comments) {
-        return comments.size() + comments.stream()
-                .mapToInt(comment -> comment.getRecomments().size())
-                .sum();
-    }
 }
