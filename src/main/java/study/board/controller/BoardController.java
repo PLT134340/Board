@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.common.annotation.AuthUser;
 import study.board.service.BoardService;
-import study.board.service.CommentService;
 import study.board.service.PostService;
 import study.board.service.dto.*;
 import study.board.service.enumeration.SearchType;
@@ -91,78 +90,5 @@ public class BoardController {
         return "redirect:/boards/{boardId}/{postId}";
     }
 
-
-    @GetMapping("/{boardId}/{postId}")
-    public String postInform(@PathVariable("boardId") Long boardId,
-                             @PathVariable("postId") Long postId,
-                             @AuthUser UserInform userInform,
-                             @ModelAttribute("commentCreateForm") CommentCreateForm form, Model model) {
-        PostInform postInform = postService.toPostInform(postId);
-
-        model.addAttribute("postInform", postInform);
-        model.addAttribute("userInform", userInform);
-
-        return "posts/postInform";
-    }
-
-    @GetMapping("/{boardId}/{postId}/edit")
-    public String modifyPostForm(@PathVariable("boardId") Long boardId,
-                                 @PathVariable("postId") Long postId, Model model) {
-        PostUpdateForm form = postService.toPostUpdateForm(postId);
-
-        model.addAttribute("form", form);
-
-        return "posts/modifyPostForm";
-    }
-
-    @PostMapping("/{boardId}/{postId}/edit")
-    public String modifyPost(@PathVariable("boardId") Long boardId,
-                             @PathVariable("postId") Long postId,
-                             @Valid @ModelAttribute("form") PostUpdateForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "posts/modifyPostForm";
-        }
-
-        form.setPostId(postId);
-        postService.updatePost(form);
-
-        return  "redirect:/boards/{boardId}/{postId}";
-    }
-
-    @GetMapping("/{boardId}/{postId}/like")
-    public String like(@PathVariable("boardId") Long boardId,
-                       @PathVariable("postId") Long postId, @AuthUser UserInform userInform,
-                       RedirectAttributes redirectAttributes) {
-        postService.addLike(postId, userInform.getId());
-
-        redirectAttributes.addAttribute("boardId", boardId);
-        redirectAttributes.addAttribute("postId", postId);
-
-        return "redirect:/boards/{boardId}/{postId}";
-    }
-
-    @PostMapping("/{boardId}/{postId}/comment")
-    public String comment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
-                          @ModelAttribute("comment") CommentCreateForm form, @AuthUser UserInform userInform,
-                          RedirectAttributes redirectAttributes) {
-        postService.saveComment(form, userInform.getId(), postId);
-
-        redirectAttributes.addAttribute("boardId", boardId);
-        redirectAttributes.addAttribute("postId", postId);
-
-        return "redirect:/boards/{boardId}/{postId}";
-    }
-
-    @PostMapping("/{boardId}/{postId}/{commentId}/recomment")
-    public String recomment(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
-                            @PathVariable("commentId") Long commentId, @AuthUser UserInform userInform,
-                            @ModelAttribute("recomment") RecommentCreateForm form, RedirectAttributes redirectAttributes) {
-        postService.saveRecomment(form, userInform.getId(), postId, commentId);
-
-        redirectAttributes.addAttribute("boardId", boardId);
-        redirectAttributes.addAttribute("postId", postId);
-
-        return "redirect:/boards/{boardId}/{postId}";
-    }
 
 }
