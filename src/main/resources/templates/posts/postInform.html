@@ -50,19 +50,39 @@
             <div class="list-group-item" th:each="comment : ${postInform.comments}">
                 <div>
                     <div class="d-flex justify-content-between">
-                        <div class="fw-bold" th:text="${comment.username}">닉네임</div>
-                        <button class="badge bg-info rounded-pill ms-auto text-decoration-none"
-                                sec:authorize="isAuthenticated()" th:id="${comment.id}"
-                                onclick="changeRecommentForm(this)">대댓글</button>
+                        <div>
+                            <div class="fw-bold" th:text="${comment.username}">닉네임</div>
+                            <div th:text="${comment.content}">댓글</div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div class="me-1">
+                                <button class="badge bg-info ms-auto text-decoration-none"
+                                        sec:authorize="isAuthenticated()" th:if="!${comment.isRemoved}"
+                                        th:id="${comment.id}" onclick="changeRecommentForm(this)">대댓글</button>
+                            </div>
+                            <form th:action="@{{postId}/{commentId}/remove (postId=*{id}, commentId=${comment.id})}"
+                                  sec:authorize="isAuthenticated()"  method="post"
+                                  th:if="${userInform.username} == ${comment.username}">
+                                <button type="submit" class="badge bg-danger ms-auto text-decoration-none"
+                                    th:id="${comment.id}">삭제</button>
+                            </form>
+                        </div>
                     </div>
-                    <div th:text="${comment.content}">댓글</div>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item justify-content-between" th:each="recomment : ${comment.recomments}">
-                        <div class="d-flex">
-                            <div class="fw-bold" th:text="${recomment.username}">닉네임</div>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="fw-bold" th:text="${recomment.username}">닉네임</div>
+                                <div th:text="${recomment.content}">대댓글</div>
+                            </div>
+                            <form th:action="@{{postId}/{recommentId}/remove (postId=*{id}, recommentId=${recomment.id})}"
+                                  sec:authorize="isAuthenticated()" method="post"
+                                  th:if="${userInform.username} == ${recomment.username}">
+                                <button type="submit" class="badge bg-danger ms-auto text-decoration-none"
+                                    th:id="${recomment.id}">삭제</button>
+                            </form>
                         </div>
-                        <div th:text="${recomment.content}">댓글</div>
                     </li>
                 </ul>
             </div>

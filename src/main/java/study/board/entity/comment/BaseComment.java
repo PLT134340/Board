@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.board.entity.DateEntity;
-import study.board.entity.Post;
 import study.board.entity.User;
 
 @Entity
@@ -22,10 +21,16 @@ public abstract class BaseComment extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    private Boolean isRemoved;
 
     public BaseComment(String content, User user) {
         this.content = content;
         this.user = user;
+        this.isRemoved = false;
+    }
+
+    public void remove() {
+        isRemoved = true;
     }
 
 }

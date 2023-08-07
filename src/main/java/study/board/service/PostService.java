@@ -98,11 +98,16 @@ public class PostService {
     public Recomment saveRecomment(RecommentCreateForm form, Long userId, Long postId, Long commentId) {
         User user = userService.findById(userId);
         Post post = findById(postId);
-        Comment comment = commentService.findById(commentId);
+        Comment comment = commentService.findCommentById(commentId);
 
         post.addComment();
 
         return commentService.saveRecomment(form.getContent(), user, comment);
+    }
+
+    public void removeComment(Long userId, Long postId, Long commentId) {
+        findById(postId).removeComment();
+        commentService.removeComment(userId, commentId);
     }
 
 }

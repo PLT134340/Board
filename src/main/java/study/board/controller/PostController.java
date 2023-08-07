@@ -23,8 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public String postInform(@PathVariable("boardId") Long boardId,
-                             @PathVariable("postId") Long postId,
+    public String postInform(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                              @AuthUser UserInform userInform,
                              @ModelAttribute("commentCreateForm") CommentCreateForm form, Model model) {
         PostInform postInform = postService.toPostInform(postId);
@@ -36,8 +35,8 @@ public class PostController {
     }
 
     @GetMapping("/edit")
-    public String modifyPostForm(@PathVariable("boardId") Long boardId,
-                                 @PathVariable("postId") Long postId, Model model) {
+    public String modifyPostForm(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
+                                 Model model) {
         PostUpdateForm form = postService.toPostUpdateForm(postId);
 
         model.addAttribute("form", form);
@@ -46,8 +45,7 @@ public class PostController {
     }
 
     @PostMapping("/edit")
-    public String modifyPost(@PathVariable("boardId") Long boardId,
-                             @PathVariable("postId") Long postId,
+    public String modifyPost(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
                              @Valid @ModelAttribute("form") PostUpdateForm form, BindingResult result) {
         if (result.hasErrors()) {
             return "posts/modifyPostForm";
@@ -60,8 +58,8 @@ public class PostController {
     }
 
     @GetMapping("/like")
-    public String like(@PathVariable("boardId") Long boardId,
-                       @PathVariable("postId") Long postId, @AuthUser UserInform userInform,
+    public String like(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
+                       @AuthUser UserInform userInform,
                        RedirectAttributes redirectAttributes) {
         postService.addLike(postId, userInform.getId());
 
@@ -95,4 +93,15 @@ public class PostController {
         return "redirect:/boards/{boardId}/{postId}";
     }
 
+    @PostMapping("/{commentId}/remove")
+    public String remove(@PathVariable("boardId") Long boardId, @PathVariable("postId") Long postId,
+                         @PathVariable("commentId") Long commentId, @AuthUser UserInform userInform,
+                         RedirectAttributes redirectAttributes) {
+        postService.removeComment(userInform.getId(), postId, commentId);
+
+        redirectAttributes.addAttribute("boardId", boardId);
+        redirectAttributes.addAttribute("postId", postId);
+
+        return "redirect:/boards/{boardId}/{postId}";
+    }
 }

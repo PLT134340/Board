@@ -14,15 +14,25 @@ public class CommentInform {
     private String content;
     private String username;
     private List<RecommentInform> recomments;
+    private Boolean isRemoved;
 
     public CommentInform(Comment comment) {
         id = comment.getId();
-        content = comment.getContent();
-        username = comment.getUser().getUsername();
+
+        if (comment.getIsRemoved()) {
+            content = "삭제된 댓글입니다.";
+            username = "(삭제)";
+        } else {
+            content = comment.getContent();
+            username = comment.getUser().getUsername();
+        }
+
         recomments = comment.getRecomments()
                 .stream()
+                .filter(rc -> !rc.getIsRemoved())
                 .map(rc -> new RecommentInform(rc))
                 .collect(Collectors.toList());
+        isRemoved = comment.getIsRemoved();
     }
 
 }
