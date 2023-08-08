@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
 import study.board.service.dto.user.UserCreateForm;
-import study.board.service.dto.user.UserLoginForm;
 import study.board.service.dto.user.UserUpdateForm;
 import study.board.service.dto.user.UserInform;
 
@@ -30,28 +29,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Long login(UserLoginForm form) {
-        validateCorrectPassword(form);
-        User user = findByUsername(form.getUsername());
-        return user.getId();
-    }
-
-    @Transactional(readOnly = true)
-    public void validateCorrectPassword(UserLoginForm form) {
-        User user = findByUsername(form.getUsername());
-        if (!passwordEncoder.matches(form.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("not match password");
-        }
-    }
-
-
-    @Transactional(readOnly = true)
     public void validateDuplicateUsername(String username) {
         if (userRepository.existsByUsername(username))
             throw new IllegalArgumentException("already exists username");
     }
-
-
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
@@ -93,7 +74,6 @@ public class UserService {
         if (userRepository.existsByUsername(username) && !findByUsername(username).getId().equals(id))
             throw new IllegalArgumentException("already exists username");
     }
-
 
     public void withdraw(Long id) {
         if(!userRepository.existsById(id)) {
