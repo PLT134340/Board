@@ -1,5 +1,6 @@
 package study.board.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,13 @@ public class UserController {
     }
 
     @GetMapping("/sign-in")
-    public String loginForm(@ModelAttribute("form") UserLoginForm form) {
+    public String loginForm(HttpServletRequest request, @ModelAttribute("form") UserLoginForm form) {
+        String uri = request.getHeader("Referer");
+
+        if (uri != null && !uri.contains("users/sign-in")) {
+            request.getSession().setAttribute("prevPage", uri);
+        }
+
         return "users/loginForm";
     }
 
