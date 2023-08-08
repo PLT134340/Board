@@ -5,9 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,11 +23,6 @@ public class Post extends DateEntity {
     private User user;
     private Integer likeCount;
     private Integer commentCount;
-    @ManyToMany
-    @JoinTable(name = "post_user",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users = new ArrayList<>();
 
     public Post(String title, String content, Board board, User user) {
         this.title = title;
@@ -46,8 +38,7 @@ public class Post extends DateEntity {
         this.content = content;
     }
 
-    public void addLike(User user) {
-        users.add(user);
+    public void addLike() {
         likeCount++;
     }
 

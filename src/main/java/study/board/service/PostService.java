@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.*;
 import study.board.entity.comment.Comment;
 import study.board.entity.comment.Recomment;
+import study.board.repository.LikeInformRepository;
 import study.board.repository.PostRepository;
 import study.board.service.dto.board.PageInform;
 import study.board.service.dto.comment.CommentCreateForm;
@@ -29,6 +30,7 @@ public class PostService {
     private final CommentService commentService;
 
     private final PostRepository postRepository;
+    private final LikeInformRepository likeInformRepository;
 
 
     public Long createPost(PostCreateForm form, Long boardId, Long userId) {
@@ -77,13 +79,17 @@ public class PostService {
 
     public void addLike(Long postId, Long userId) {
         User user = userService.findById(userId);
-        Post post = findById(postId);
+        List<LikeInform> likeInforms = likeInformRepository.findByPost_Id(postId);
 
-        if(post.getUsers().contains(user)) {
+        if (likeInforms
+                .stream()
+                .anyMatch(li -> li.getUser().equals(user))) {
             throw new IllegalArgumentException("already like");
         }
 
-        findById(postId).addLike(user);
+        Post post = findById(postId);
+        post.addLike();
+        likeInformRepository.save(new LikeInform(post, user));
     }
 
     public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
