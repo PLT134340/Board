@@ -56,7 +56,7 @@ public class PostService {
         } else {
             throw new IllegalStateException("no such type");
         }
-        return new PageInform(page, type, keyword);
+        return new PageInform(page);
     }
 
     public PostInform toPostInform(Long id) {
@@ -67,10 +67,8 @@ public class PostService {
         return new PostInform(post, comments);
     }
 
-    public void updatePost(PostUpdateForm postUpdateForm) {
-        Post post = findById(postUpdateForm.getPostId());
-
-        post.updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
+    public void updatePost(PostUpdateForm postUpdateForm, Long postId) {
+        findById(postId).updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
     }
 
     public PostUpdateForm toPostUpdateForm(Long id) {

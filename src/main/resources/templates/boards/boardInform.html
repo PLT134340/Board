@@ -34,24 +34,24 @@
         </table>
         <div class="d-flex mb-3 justify-content-center" th:object="${pageInform}">
             <div class="btn-group" role="group" th:with="start = *{start}, end = *{end}">
-                <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = 0, type = *{type}, keyword = *{keyword})}"
+                <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = 0, type = ${param.type}, keyword = ${param.keyword})}"
                    th:if="${start} > 0" th:text="'<<'" class="btn btn-outline-secondary" role="button">첫 페이지</a>
                 <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = ${start} - 1,
-                type = *{type}, keyword = *{keyword})}" th:if="*{start > 0}" th:text="'<'"
+                type = ${param.type}, keyword = ${param.keyword})}" th:if="*{start > 0}" th:text="'<'"
                    class="btn btn-outline-secondary" role="button">이전 페이지</a>
 
                 <div class="btn-group" th:each="num : ${#numbers.sequence(start, end)}" role="group">
-                    <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page=${num}, type = *{type}, keyword = *{keyword})}"
+                    <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page=${num}, type = ${param.type}, keyword = ${param.keyword})}"
                        th:if="${num} == *{page}" th:text="${num} + 1" class="btn btn-secondary" role="button">번호</a>
-                    <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page=${num}, type = *{type}, keyword = *{keyword})}"
+                    <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page=${num}, type = ${param.type}, keyword = ${param.keyword})}"
                        th:unless="${num} == *{page}" th:text="${num} + 1" class="btn btn-outline-secondary" role="button">번호</a>
                 </div>
 
                 <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = ${end} + 1,
-                type = *{type}, keyword = *{keyword})}" th:if="*{end < total - 1}" th:text="'>'"
+                type = ${param.type}, keyword = ${param.keyword})}" th:if="*{end < total - 1}" th:text="'>'"
                    class="btn btn-outline-secondary" role="button">다음 페이지</a>
                 <a href="#" th:href="@{{boardId}(boardId=${boardInform.id}, page = *{total} - 1,
-                type = *{type}, keyword = *{keyword})}" th:if="*{end < total - 1}" th:text="'>>'"
+                type = ${param.type}, keyword = ${param.keyword})}" th:if="*{end < total - 1}" th:text="'>>'"
                    class="btn btn-outline-secondary" role="button">마지막 페이지</a>
             </div>
 
@@ -62,9 +62,9 @@
                     <select class="form-select w-auto" name="type">
                         <option th:each="type : ${T(study.board.service.enumeration.SearchType).values()}"
                                 th:value="${type}" th:text="${type.typeName}"
-                                th:selected="${type.name()} == ${pageInform.type.name()}">타입</option>
+                                th:selected="${type.name()} == ${param.type}">타입</option>
                     </select>
-                    <input class="form-control w-50" type="text" name="keyword" th:value="${pageInform.keyword}">
+                    <input class="form-control w-50" type="text" name="keyword" th:value="${param.keyword}">
                     <button class="btn btn-outline-secondary" type="submit">검색</button>
                 </div>
             </form>

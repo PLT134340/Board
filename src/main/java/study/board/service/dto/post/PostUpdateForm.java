@@ -9,7 +9,6 @@ import study.board.entity.Post;
 @Getter @Setter
 public class PostUpdateForm {
 
-    private Long postId;
     @NotBlank
     private String title;
     @NotNull

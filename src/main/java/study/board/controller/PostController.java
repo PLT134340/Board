@@ -51,8 +51,7 @@ public class PostController {
             return "posts/modifyPostForm";
         }
 
-        form.setPostId(postId);
-        postService.updatePost(form);
+        postService.updatePost(form, postId);
 
         return  "redirect:/boards/{boardId}/{postId}";
     }

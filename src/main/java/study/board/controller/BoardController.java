@@ -49,11 +49,11 @@ public class BoardController {
     }
 
     @GetMapping
-    public String search(@RequestParam(value = "boardName", required = false, defaultValue = "") String boardName,
+    public String search(@RequestParam(value = "boardName", defaultValue = "") String boardName,
                          Model model) {
         List<BoardInform> boardInforms = boardService.searchByName(boardName);
-        model.addAttribute("boardName", boardName);
         model.addAttribute("boardInforms", boardInforms);
+
         return "boards/boardLists";
     }
 
@@ -72,9 +72,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/write")
-    public String createPostForm(@PathVariable("boardId") Long boardId, @ModelAttribute("form") PostCreateForm form,
-                                 Model model) {
-        model.addAttribute("boardId", boardId);
+    public String createPostForm(@PathVariable("boardId") Long boardId, @ModelAttribute("form") PostCreateForm form) {
         return "posts/createPostForm";
     }
 
@@ -93,6 +91,5 @@ public class BoardController {
 
         return "redirect:/boards/{boardId}/{postId}";
     }
-
 
 }
