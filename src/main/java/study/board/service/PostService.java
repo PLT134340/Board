@@ -114,4 +114,12 @@ public class PostService {
         commentService.removeComment(userId, commentId);
     }
 
+    public PageInform getPostPageByUserId(Long userId, Pageable pageable) {
+        return new PageInform(postRepository.findByUser_Id(userId, pageable));
+    }
+
+    public PageInform getPostPageByCommentUserId(Long userId, Pageable pageable) {
+        return new PageInform(postRepository.findByComment_User_Id(userId, pageable));
+    }
+
 }

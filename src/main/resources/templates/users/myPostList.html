@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
+  <h2>내가 쓴 글</h2>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>제목</th>
+      <th>댓글</th>
+      <th>공감</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${pageInform.posts}">
+      <td><a href="#" th:href="@{/posts/{postId}(postId=${post.id})}"
+             th:text="${post.id}"></a></td>
+      <td th:text="${post.title}"></td>
+      <td th:text="${post.commentCount}"></td>
+      <td th:text="${post.like}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="d-flex mb-3 justify-content-center" th:object="${pageInform}">
+    <div class="btn-group" role="group" th:with="start = *{start}, end = *{end}">
+      <a href="#" th:href="@{posts (page = 0)}"
+         th:if="${start} > 0" th:text="'<<'" class="btn btn-outline-secondary" role="button">첫 페이지</a>
+      <a href="#" th:href="@{posts (page = ${start} - 1)}" th:if="*{start > 0}" th:text="'<'"
+         class="btn btn-outline-secondary" role="button">이전 페이지</a>
+
+      <div class="btn-group" th:each="num : ${#numbers.sequence(start, end)}" role="group">
+        <a href="#" th:href="@{posts (page=${num})}"
+           th:if="${num} == *{page}" th:text="${num} + 1" class="btn btn-secondary" role="button">번호</a>
+        <a href="#" th:href="@{posts (page=${num})}"
+           th:unless="${num} == *{page}" th:text="${num} + 1" class="btn btn-outline-secondary" role="button">번호</a>
+      </div>
+
+      <a href="#" th:href="@{posts (page = ${end} + 1)}" th:if="*{end < total - 1}" th:text="'>'"
+         class="btn btn-outline-secondary" role="button">다음 페이지</a>
+      <a href="#" th:href="@{posts (page = *{total} - 1)}" th:if="*{end < total - 1}" th:text="'>>'"
+         class="btn btn-outline-secondary" role="button">마지막 페이지</a>
+    </div>
+  </div>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

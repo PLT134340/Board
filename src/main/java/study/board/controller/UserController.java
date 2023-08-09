@@ -2,12 +2,17 @@ package study.board.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import study.board.common.annotation.AuthUser;
+import study.board.service.PostService;
 import study.board.service.UserService;
+import study.board.service.dto.board.PageInform;
 import study.board.service.dto.user.UserUpdateForm;
 import study.board.service.dto.user.UserInform;
 
@@ -19,6 +24,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final PostService postService;
 
     @GetMapping
     public String userList(Model model) {
@@ -64,5 +70,24 @@ public class UserController {
         userService.withdraw(userId);
         return "redirect:/";
     }
+
+    @GetMapping("/mypost")
+    public String myPost(@AuthUser UserInform userInform, @PageableDefault(size = 10) Pageable pageable, Model model) {
+        PageInform pageInform = postService.getPostPageByUserId(userInform.getId(), pageable);
+
+        model.addAttribute("pageInform", pageInform);
+
+        return "users/myPostList";
+    }
+
+    @GetMapping("/mycommentpost")
+    public String myCommentPost(@AuthUser UserInform userInform, @PageableDefault(size = 10) Pageable pageable, Model model) {
+        PageInform pageInform = postService.getPostPageByCommentUserId(userInform.getId(), pageable);
+
+        model.addAttribute("pageInform", pageInform);
+
+        return "users/myCommentPostList";
+    }
+
 
 }

@@ -9,6 +9,12 @@
         <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" href="/users/mypost">내가 쓴 글</a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" href="/users/mycommentpost">댓글 단 글</a>
+        </li>
       </ul>
       <div class="d-flex">
         <div sec:authorize="isAnonymous()">
