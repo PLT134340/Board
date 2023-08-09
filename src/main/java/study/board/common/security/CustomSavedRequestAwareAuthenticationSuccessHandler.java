@@ -26,7 +26,7 @@ public class CustomSavedRequestAwareAuthenticationSuccessHandler extends SavedRe
         SavedRequest savedRequest = this.requestCache.getRequest(request, response);
         if (savedRequest == null && prevPage != null && !prevPage.equals("")) {
             String targetUrl;
-            if (prevPage.contains("/users/sign-up")) {
+            if (prevPage.contains("/sign-up")) {
                 targetUrl = "/";
             } else {
                 targetUrl = prevPage;

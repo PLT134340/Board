@@ -25,8 +25,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(
-                                new AntPathRequestMatcher("/users/sign-in"),
-                                new AntPathRequestMatcher("/users/sign-up")).anonymous()
+                                new AntPathRequestMatcher("/sign-in"),
+                                new AntPathRequestMatcher("/sign-up")).anonymous()
                         .requestMatchers(
                                 new AntPathRequestMatcher("/users/**"),
                                 new AntPathRequestMatcher("/**/create"),
@@ -41,13 +41,14 @@ public class SecurityConfig {
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter
                                 .XFrameOptionsMode.SAMEORIGIN)))
                 .formLogin((formLogin) -> formLogin
-                        .loginPage("/users/sign-in")
-                        .loginProcessingUrl("/users/sign-in")
+                        .loginPage("/sign-in")
+                        .loginProcessingUrl("/sign-in")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .successHandler(customSavedRequestAwareAuthenticationSuccessHandler()))
+                        .successHandler(customSavedRequestAwareAuthenticationSuccessHandler())
+                        .failureUrl("/sign-in?error=true"))
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/users/sign-out"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/sign-out"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true));
         return http.build();

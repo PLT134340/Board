@@ -30,36 +30,6 @@ public class UserController {
         return "users/userList";
     }
 
-    @GetMapping("/sign-up")
-    public String joinForm(@ModelAttribute("form") UserCreateForm form) {
-        return "users/createUserForm";
-    }
-
-    @PostMapping("/sign-up")
-    public String join(@Valid @ModelAttribute("form") UserCreateForm form, BindingResult result,
-                       RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "users/createUserForm";
-        }
-
-        Long userId = userService.join(form);
-
-        redirectAttributes.addAttribute("status", true);
-
-        return "redirect:/users/sign-in";
-    }
-
-    @GetMapping("/sign-in")
-    public String loginForm(HttpServletRequest request, @ModelAttribute("form") UserLoginForm form) {
-        String uri = request.getHeader("Referer");
-
-        if (uri != null && !uri.contains("users/sign-in")) {
-            request.getSession().setAttribute("prevPage", uri);
-        }
-
-        return "users/loginForm";
-    }
-
     @GetMapping("/{userId}")
     public String userInform(@PathVariable("userId") Long userId, Model model) {
         UserInform user = userService.toUserInform(userId);
