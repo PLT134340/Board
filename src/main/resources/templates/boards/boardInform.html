@@ -23,7 +23,7 @@
             </thead>
             <tbody>
             <tr th:each="post : ${pageInform.posts}">
-                <td><a href="#" th:href="@{{boardId}/{postId}(boardId=${boardInform.id}, postId=${post.id})}"
+                <td><a href="#" th:href="@{/posts/{postId}(postId=${post.id})}"
                        th:text="${post.id}"></a></td>
                 <td th:text="${post.title}"></td>
                 <td th:text="${post.username}"></td>
