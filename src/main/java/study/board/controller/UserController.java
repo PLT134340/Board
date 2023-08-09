@@ -1,6 +1,5 @@
 package study.board.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,8 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import study.board.service.UserService;
-import study.board.service.dto.user.UserCreateForm;
-import study.board.service.dto.user.UserLoginForm;
 import study.board.service.dto.user.UserUpdateForm;
 import study.board.service.dto.user.UserInform;
 
@@ -62,10 +59,10 @@ public class UserController {
         return "redirect:/users/{userId}";
     }
 
-    @GetMapping("/{userId}/delete")
+    @PostMapping("/{userId}/delete")
     public String withdraw(@PathVariable("userId") Long userId) {
         userService.withdraw(userId);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
 }
