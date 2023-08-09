@@ -56,7 +56,7 @@ public class CommentService {
         BaseComment baseComment = findById(commentId);
         validateCorrectUser(userId, baseComment);
 
-        baseComment.remove();
+        baseCommentRepository.delete(baseComment);
     }
 
     private void validateCorrectUser(Long userId, BaseComment baseComment) {
