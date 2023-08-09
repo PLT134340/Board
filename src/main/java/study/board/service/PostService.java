@@ -45,7 +45,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
 
-    public PageInform searchByKeyword(SearchType type, String keyword, Pageable pageable, Long boardId) {
+    public PageInform getPageInformByKeyword(SearchType type, String keyword, Pageable pageable, Long boardId) {
         Page<Post> page;
         if(type == SearchType.TITLE) {
             page = postRepository.findByBoard_IdAndTitleContaining(boardId, keyword, pageable);

@@ -63,7 +63,7 @@ public class BoardController {
                               @RequestParam(value = "keyword", defaultValue = "") String keyword,
                               @PageableDefault(size = 10) Pageable pageable, Model model) {
         BoardInform boardInform = boardService.toBoardInform(boardId);
-        PageInform pageInform = postService.searchByKeyword(type, keyword, pageable, boardId);
+        PageInform pageInform = postService.getPageInformByKeyword(type, keyword, pageable, boardId);
 
         model.addAttribute("boardInform", boardInform);
         model.addAttribute("pageInform", pageInform);
@@ -89,7 +89,7 @@ public class BoardController {
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);
 
-        return "redirect:/boards/{boardId}/{postId}";
+        return "redirect:/posts/{postId}";
     }
 
 }
