@@ -27,12 +27,6 @@ public abstract class BaseComment extends DateEntity {
     private Post post;
     private Boolean isRemoved;
 
-    public BaseComment(String content, User user) {
-        this.content = content;
-        this.user = user;
-        this.isRemoved = false;
-    }
-
     public BaseComment(String content, User user, Post post) {
         this.content = content;
         this.user = user;

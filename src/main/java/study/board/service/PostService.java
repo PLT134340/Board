@@ -103,10 +103,7 @@ public class PostService {
         User user = userService.findById(userId);
         Post post = findById(postId);
         Comment comment = commentService.findCommentById(commentId);
-
-        post.addComment();
-
-        return commentService.saveRecomment(form.getContent(), user, comment);
+        return commentService.saveRecomment(form.getContent(), user, post, comment);
     }
 
     public void removeComment(Long userId, Long postId, Long commentId) {

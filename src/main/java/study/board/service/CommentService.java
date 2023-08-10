@@ -46,8 +46,8 @@ public class CommentService {
         return commentRepository.save(new Comment(content, user, post));
     }
 
-    public Recomment saveRecomment(String content, User user, Comment comment) {
-        Recomment recomment = new Recomment(content, user, comment);
+    public Recomment saveRecomment(String content, User user, Post post, Comment comment) {
+        Recomment recomment = new Recomment(content, user, post, comment);
         comment.getRecomments().add(recomment);
         return recomment;
     }
