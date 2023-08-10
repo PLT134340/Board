@@ -15,10 +15,12 @@ import study.board.service.dto.comment.CommentCreateForm;
 import study.board.service.dto.comment.RecommentCreateForm;
 import study.board.service.dto.post.PostCreateForm;
 import study.board.service.dto.post.PostInform;
+import study.board.service.dto.post.PostSummaryInform;
 import study.board.service.dto.post.PostUpdateForm;
 import study.board.service.enumeration.SearchType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -56,15 +58,25 @@ public class PostService {
         } else {
             throw new IllegalStateException("no such type");
         }
-        return new PageInform(page);
+        return toPageInform(page);
+    }
+
+    public PageInform toPageInform(Page<Post> page) {
+        List<PostSummaryInform> posts = page.getContent()
+                .stream()
+                .map(post -> new PostSummaryInform(post, commentService.countByPostId(post.getId()), likeInformRepository.countByPost_Id(post.getId())))
+                .collect(Collectors.toList());
+        return new PageInform(page, posts);
     }
 
     public PostInform toPostInform(Long id) {
         Post post = findById(id);
 
         List<Comment> comments = commentService.findAllByPostId(id);
+        int commentCount = commentService.countByPostId(id);
+        int likeCount = likeInformRepository.countByPost_Id(id);
 
-        return new PostInform(post, comments);
+        return new PostInform(post, comments, commentCount, likeCount);
     }
 
     public void updatePost(PostUpdateForm postUpdateForm, Long postId) {
@@ -86,16 +98,12 @@ public class PostService {
         }
 
         Post post = findById(postId);
-        post.addLike();
         likeInformRepository.save(new LikeInform(post, user));
     }
 
     public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
         User user = userService.findById(userId);
         Post post = findById(postId);
-
-        post.addComment();
-
         return commentService.saveComment(form.getContent(), user, post);
     }
 
@@ -106,17 +114,16 @@ public class PostService {
         return commentService.saveRecomment(form.getContent(), user, post, comment);
     }
 
-    public void removeComment(Long userId, Long postId, Long commentId) {
-        findById(postId).removeComment();
+    public void removeComment(Long userId, Long commentId) {
         commentService.removeComment(userId, commentId);
     }
 
-    public PageInform getPostPageByUserId(Long userId, Pageable pageable) {
-        return new PageInform(postRepository.findByUser_Id(userId, pageable));
+    public PageInform getPostPageInformByUserId(Long userId, Pageable pageable) {
+        return toPageInform(postRepository.findByUser_Id(userId, pageable));
     }
 
-    public PageInform getPostPageByCommentUserId(Long userId, Pageable pageable) {
-        return new PageInform(postRepository.findByComment_User_Id(userId, pageable));
+    public PageInform getPostPageInformByCommentUserId(Long userId, Pageable pageable) {
+        return toPageInform(postRepository.findByComment_User_Id(userId, pageable));
     }
 
 }

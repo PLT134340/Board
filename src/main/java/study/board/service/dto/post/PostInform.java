@@ -19,22 +19,22 @@ public class PostInform {
     private String createdDateTime;
     private String username;
     private String content;
-    private int commentCount;
     private List<CommentInform> comments;
-    private int like;
+    private int commentCount;
+    private int likeCount;
 
-    public PostInform(Post post, List<Comment> commentList) {
+    public PostInform(Post post, List<Comment> commentList, int commentCount, int likeCount) {
         id = post.getId();
         title = post.getTitle();
         createdDateTime = post.getCreatedDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
         username = post.getUser().getUsername();
         content = post.getContent();
-        commentCount = post.getCommentCount();
         comments = commentList
                 .stream()
                 .map(comment -> new CommentInform(comment))
                 .collect(Collectors.toList());
-        like = post.getLikeCount();
+        this.commentCount = commentCount;
+        this.likeCount = likeCount;
     }
 
 }

@@ -7,7 +7,6 @@ import study.board.entity.Post;
 import study.board.service.dto.post.PostSummaryInform;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 public class PageInform {
@@ -17,13 +16,10 @@ public class PageInform {
     int start;
     int end;
 
-    public PageInform(Page<Post> page) {
+    public PageInform(Page<Post> page, List<PostSummaryInform> posts) {
         this.page = page.getNumber();
         this.total = page.getTotalPages();
-        this.posts = page.getContent()
-                .stream()
-                .map(post -> new PostSummaryInform(post))
-                .collect(Collectors.toList());
+        this.posts = posts;
 
         int size = page.getSize();
         this.start = this.page - this.page % size;

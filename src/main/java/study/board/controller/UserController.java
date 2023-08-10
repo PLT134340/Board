@@ -73,7 +73,7 @@ public class UserController {
 
     @GetMapping("/mypost")
     public String myPost(@AuthUser UserInform userInform, @PageableDefault(size = 10) Pageable pageable, Model model) {
-        PageInform pageInform = postService.getPostPageByUserId(userInform.getId(), pageable);
+        PageInform pageInform = postService.getPostPageInformByUserId(userInform.getId(), pageable);
 
         model.addAttribute("pageInform", pageInform);
 
@@ -82,7 +82,7 @@ public class UserController {
 
     @GetMapping("/mycommentpost")
     public String myCommentPost(@AuthUser UserInform userInform, @PageableDefault(size = 10) Pageable pageable, Model model) {
-        PageInform pageInform = postService.getPostPageByCommentUserId(userInform.getId(), pageable);
+        PageInform pageInform = postService.getPostPageInformByCommentUserId(userInform.getId(), pageable);
 
         model.addAttribute("pageInform", pageInform);
 

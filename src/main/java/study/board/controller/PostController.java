@@ -87,7 +87,7 @@ public class PostController {
     @PostMapping("/{commentId}/remove")
     public String remove(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, 
                          @AuthUser UserInform userInform, RedirectAttributes redirectAttributes) {
-        postService.removeComment(userInform.getId(), postId, commentId);
+        postService.removeComment(userInform.getId(), commentId);
 
         redirectAttributes.addAttribute("postId", postId);
 

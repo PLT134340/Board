@@ -65,4 +65,8 @@ public class CommentService {
         }
     }
 
+    int countByPostId(Long postId) {
+        return baseCommentRepository.countByPost_Id(postId);
+    }
+
 }

@@ -13,12 +13,12 @@ public class PostSummaryInform {
     private int commentCount;
     private int like;
 
-    public PostSummaryInform(Post post) {
+    public PostSummaryInform(Post post, int commentCount, int likeCount) {
         id = post.getId();
         title = post.getTitle();
         username = post.getUser().getUsername();
-        commentCount = post.getCommentCount();
-        like = post.getLikeCount();
+        this.commentCount = commentCount;
+        this.like = likeCount;
     }
 
 }

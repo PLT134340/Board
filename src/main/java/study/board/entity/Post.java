@@ -21,16 +21,12 @@ public class Post extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    private Integer likeCount;
-    private Integer commentCount;
 
     public Post(String title, String content, Board board, User user) {
         this.title = title;
         this.content = content;
         this.board = board;
         this.user = user;
-        this.likeCount = 0;
-        this.commentCount = 0;
     }
 
     public void updatePost(String title, String content) {
@@ -38,15 +34,4 @@ public class Post extends DateEntity {
         this.content = content;
     }
 
-    public void addLike() {
-        likeCount++;
-    }
-
-    public void addComment() {
-        commentCount++;
-    }
-
-    public void removeComment() {
-        commentCount--;
-    }
 }

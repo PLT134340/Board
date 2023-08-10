@@ -23,7 +23,7 @@
         </div>
         <div class="clearfix mb-1">
             <a href="#" th:href="@{{postId}/like (postId=*{id})}"
-               class="btn btn-outline-danger" th:text="*{like}" role="button">좋아요</a>
+               class="btn btn-outline-danger" th:text="*{getLikeCount}" role="button">좋아요</a>
             <a href="#" class="btn btn-outline-info mx-1" th:text="*{commentCount}">댓글 수</a>
             <a href="#" th:href="@{{postId}/edit (postId=*{id})}"
                sec:authorize="isAuthenticated()" th:if="${userInform.username} == ${postInform.username}"
@@ -77,7 +77,7 @@
                             <form th:action="@{{postId}/{recommentId}/remove (postId=*{id}, recommentId=${recomment.id})}"
                                   sec:authorize="isAuthenticated()" method="post"
                                   th:if="${userInform.username} == ${recomment.username}">
-                                <button type="submit" class="btn btn-outline-info btn-sm ms-auto"
+                                <button type="submit" class="btn btn-outline-danger btn-sm ms-auto"
                                     th:id="${recomment.id}">삭제</button>
                             </form>
                         </div>
