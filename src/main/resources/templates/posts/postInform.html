@@ -6,28 +6,30 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div th:object="${postInform}">
-        <div class="container border rounded p-4 mb-3">
-            <div class="row">
-                <img class="col-2" src="/image/anonymous.png">
-                <div class="col-7">
-                    <div class="row">
-                        <h4 class="fw-bold" th:text="*{username}">닉네임</h4>
-                        <h6 class="text-secondary" th:text="*{createdDateTime}">작성 시간</h6>
-                    </div>
+        <div class="border rounded p-4 mb-3">
+            <div class="d-flex justify-content-start">
+                <i class="bi bi-person-square me-3 text-secondary" style="font-size: 4em"></i>
+                <div class="pt-3">
+                    <h4 class="fw-bold" th:text="*{username}">닉네임</h4>
+                    <h6 class="text-secondary" th:text="*{createdDateTime}">작성 시간</h6>
                 </div>
             </div>
-            <div class="row">
+            <div>
                 <h1 class="fw-bold" th:text="*{title}">제목</h1>
-                <h4 th:text="*{content}">내용</h4>
+                <h4 class="my-3" th:text="*{content}">내용</h4>
             </div>
-        </div>
-        <div class="clearfix mb-1">
-            <a href="#" th:href="@{{postId}/like (postId=*{id})}"
-               class="btn btn-outline-danger" th:text="*{getLikeCount}" role="button">좋아요</a>
-            <a href="#" class="btn btn-outline-info mx-1" th:text="*{commentCount}">댓글 수</a>
-            <a href="#" th:href="@{{postId}/edit (postId=*{id})}"
-               sec:authorize="isAuthenticated()" th:if="${userInform.username} == ${postInform.username}"
-               class="btn btn-primary float-end" role="button">수정</a>
+            <div class="d-flex mb-2">
+                <i class="bi bi-hand-thumbs-up text-danger me-3"><span class="fst-normal ms-1" th:text="*{likeCount}">공감 수</span></i>
+                <i class="bi bi-chat text-info"><span class="fst-normal ms-1" th:text="*{commentCount}">댓글 수</span></i>
+            </div>
+            <div class="d-flex">
+                <a href="#" th:href="@{{postId}/like (postId=*{id})}" class="btn btn-outline-danger" role="button">
+                    <i class="bi bi-hand-thumbs-up"></i> 공감
+                </a>
+                <a href="#" th:href="@{{postId}/edit (postId=*{id})}"
+                   sec:authorize="isAuthenticated()" th:if="${userInform.username} == ${postInform.username}"
+                   class="btn btn-primary ms-auto" role="button">수정</a>
+            </div>
         </div>
         <hr>
         <form role="form" id="commentCreateForm" th:action="@{{postId}/comment (postId=*{id})}"
@@ -45,11 +47,17 @@
             </div>
         </form>
         <ul class="list-group mb-3">
-            <div class="list-group-item" th:each="comment : ${postInform.comments}">
+            <li class="list-group-item" th:each="comment : ${postInform.comments}">
                 <div>
                     <div class="d-flex justify-content-between">
-                        <div>
-                            <div class="fw-bold" th:text="${comment.username}">닉네임</div>
+                        <div class="mb-2">
+                            <div class="d-flex">
+                                <i class="bi bi-person-square text-secondary me-2" style="font-size: 2em"></i>
+                                <div class="fw-bold text-info align-self-center" th:if="${comment.username == postInform.username}"
+                                     th:text="${comment.username.concat('(글쓴이)')}">닉네임(글쓴이)</div>
+                                <div class="fw-bold align-self-center" th:unless="${comment.username == postInform.username}"
+                                     th:text="${comment.username}">닉네임</div>
+                            </div>
                             <div th:text="${comment.content}">댓글</div>
                             <div class="text-secondary" th:text="${comment.createdDateTime}">작성 시간</div>
                         </div>
@@ -68,11 +76,20 @@
                         </div>
                     </div>
                 </div>
+                <div>
+
+                </div>
                 <ul class="list-group">
                     <li class="list-group-item justify-content-between" th:each="recomment : ${comment.recomments}">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <div class="fw-bold" th:text="${recomment.username}">닉네임</div>
+                                <div class="d-flex">
+                                    <i class="bi bi-person-square text-secondary me-2" style="font-size: 2em"></i>
+                                    <div class="fw-bold text-info align-self-center" th:if="${recomment.username == postInform.username}"
+                                         th:text="${recomment.username.concat('(글쓴이)')}">닉네임(글쓴이)</div>
+                                    <div class="fw-bold align-self-center" th:unless="${recomment.username == postInform.username}"
+                                         th:text="${recomment.username}">닉네임</div>
+                                </div>
                                 <div th:text="${recomment.content}">대댓글</div>
                                 <div class="text-secondary" th:text="${recomment.createdDateTime}">작성 시간</div>
                             </div>
@@ -85,9 +102,8 @@
                         </div>
                     </li>
                 </ul>
-            </div>
+            </li>
         </ul>
-        </table>
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
