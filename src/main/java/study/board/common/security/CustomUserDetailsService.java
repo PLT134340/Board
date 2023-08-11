@@ -20,6 +20,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("not found"));
 
+        if (user.getIsRemoved()) {
+            throw new IllegalArgumentException("deleted user");
+        }
+
         return new UserAdapter(user);
     }
 }
