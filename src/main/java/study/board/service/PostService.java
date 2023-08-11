@@ -35,11 +35,11 @@ public class PostService {
     private final LikeInformRepository likeInformRepository;
 
 
-    public Long createPost(PostCreateForm form, Long boardId, Long userId) {
+    public Post createPost(PostCreateForm form, Long boardId, Long userId) {
         Board board = boardService.findById(boardId);
         User user = userService.findById(userId);
 
-        return postRepository.save(new Post(form.getTitle(), form.getContent(), board, user)).getId();
+        return postRepository.save(new Post(form.getTitle(), form.getContent(), board, user));
     }
 
     @Transactional(readOnly = true)

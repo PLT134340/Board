@@ -45,7 +45,7 @@ public class HomeController {
             return "users/createUserForm";
         }
 
-        Long userId = userService.join(form);
+        userService.join(form);
 
         redirectAttributes.addAttribute("status", true);
 

@@ -84,7 +84,7 @@ public class BoardController {
             return "posts/createPostForm";
         }
 
-        Long postId = postService.createPost(form, boardId, userInform.getId());
+        Long postId = postService.createPost(form, boardId, userInform.getId()).getId();
 
         redirectAttributes.addAttribute("boardId", boardId);
         redirectAttributes.addAttribute("postId", postId);

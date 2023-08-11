@@ -22,10 +22,9 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Long join(UserCreateForm form) {
+    public User join(UserCreateForm form) {
         validateDuplicateUsername(form.getUsername());
-        User user = userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
-        return user.getId();
+        return userRepository.save(new User(form.getUsername(), passwordEncoder.encode(form.getPassword())));
     }
 
     @Transactional(readOnly = true)
@@ -47,7 +46,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserInform> findAllToUserInform() {
+    public List<UserInform> toUserInformList() {
        return userRepository.findAll()
                .stream()
                .map(user -> new UserInform(user))
@@ -70,18 +69,13 @@ public class UserService {
         user.update(form.getUsername(), passwordEncoder.encode(form.getPassword()));
     }
 
-    @Transactional(readOnly = true)
-    public void validateDuplicateUsernameExcludeSelf(String username, Long id) {
+    private void validateDuplicateUsernameExcludeSelf(String username, Long id) {
         if (userRepository.existsByUsername(username) && !findByUsername(username).getId().equals(id))
             throw new IllegalArgumentException("already exists username");
     }
 
     public void withdraw(Long id) {
-        if(!userRepository.existsById(id)) {
-            throw new IllegalArgumentException("no such user");
-        }
-
-        userRepository.deleteById(id);
+        userRepository.delete(findById(id));
     }
 
 }
