@@ -34,4 +34,15 @@ public abstract class BaseComment extends DateEntity {
         this.isRemoved = false;
     }
 
+    public String getUsername() {
+        if (isRemoved)
+            return "(삭제)";
+        return user.getUsername();
+    }
+
+    public String getContent(){
+        if (isRemoved)
+            return "삭제된 댓글입니다.";
+        return content;
+    }
 }

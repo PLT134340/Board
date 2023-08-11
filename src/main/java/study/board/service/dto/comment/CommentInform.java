@@ -18,14 +18,8 @@ public class CommentInform {
 
     public CommentInform(Comment comment) {
         id = comment.getId();
-
-        if (comment.getIsRemoved()) {
-            content = "삭제된 댓글입니다.";
-            username = "(삭제)";
-        } else {
-            content = comment.getContent();
-            username = comment.getUser().getUsername();
-        }
+        username = comment.getUsername();
+        content = comment.getContent();
 
         recomments = comment.getRecomments()
                 .stream()
