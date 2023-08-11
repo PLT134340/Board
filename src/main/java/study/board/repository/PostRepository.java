@@ -15,6 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUser_Id(Long userId, Pageable pageable);
     @Query("select p from Post p where p.id in" +
             " (select distinct bc.post.id from BaseComment bc where bc.isRemoved = false and bc.user.id = :userId)")
-    Page<Post> findByComment_User_Id(@Param("userId") Long userId, Pageable pageable);
     Page<Post> findByCommentUserId(@Param("userId") Long userId, Pageable pageable);
+    @Query("select p from Post p where (select count(*) from Like li where p.id = li.post.id) >= 10")
+    Page<Post> findByLikeGreaterThanEqual10(Pageable pageable);
 }

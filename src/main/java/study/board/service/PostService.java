@@ -132,4 +132,9 @@ public class PostService {
         return toPageInform(postRepository.findByCommentUserId(userId, pageable));
     }
 
+    @Transactional(readOnly = true)
+    public PageInform getHotPostPageInform(Pageable pageable) {
+        return toPageInform(postRepository.findByLikeGreaterThanEqual10(pageable));
+    }
+
 }

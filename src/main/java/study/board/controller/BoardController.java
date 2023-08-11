@@ -92,4 +92,13 @@ public class BoardController {
         return "redirect:/posts/{postId}";
     }
 
+    @GetMapping("/hotboard")
+    public String hotBoard(@PageableDefault(size = 10) Pageable pageable, Model model) {
+        PageInform pageInform = postService.getHotPostPageInform(pageable);
+
+        model.addAttribute("pageInform", pageInform);
+
+        return "boards/hotBoardInform";
+    }
+
 }
