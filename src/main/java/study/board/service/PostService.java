@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.board.entity.*;
 import study.board.entity.comment.Comment;
 import study.board.entity.comment.Recomment;
-import study.board.repository.LikeInformRepository;
+import study.board.repository.LikeRepository;
 import study.board.repository.PostRepository;
 import study.board.service.dto.board.PageInform;
 import study.board.service.dto.comment.CommentCreateForm;
@@ -32,7 +32,7 @@ public class PostService {
     private final CommentService commentService;
 
     private final PostRepository postRepository;
-    private final LikeInformRepository likeInformRepository;
+    private final LikeRepository likeRepository;
 
 
     public Post createPost(PostCreateForm form, Long boardId, Long userId) {
@@ -67,7 +67,7 @@ public class PostService {
     public PageInform toPageInform(Page<Post> page) {
         List<PostSummaryInform> posts = page.getContent()
                 .stream()
-                .map(post -> new PostSummaryInform(post, commentService.countByPostId(post.getId()), likeInformRepository.countByPost_Id(post.getId())))
+                .map(post -> new PostSummaryInform(post, commentService.countByPostId(post.getId()), likeRepository.countByPost_Id(post.getId())))
                 .collect(Collectors.toList());
         return new PageInform(page, posts);
     }
@@ -77,8 +77,8 @@ public class PostService {
         Post post = findById(id);
 
         List<Comment> comments = commentService.findAllByPostId(id);
-        int commentCount = commentService.countByPostId(id);
-        int likeCount = likeInformRepository.countByPost_Id(id);
+        Long commentCount = commentService.countByPostId(id);
+        Long likeCount = likeRepository.countByPost_Id(id);
 
         return new PostInform(post, comments, commentCount, likeCount);
     }
@@ -94,16 +94,15 @@ public class PostService {
 
     public void addLike(Long postId, Long userId) {
         User user = userService.findById(userId);
-        List<LikeInform> likeInforms = likeInformRepository.findByPost_Id(postId);
+        List<Like> likes = likeRepository.findByPost_Id(postId);
 
-        if (likeInforms
-                .stream()
+        if (likes.stream()
                 .anyMatch(li -> li.getUser().equals(user))) {
             throw new IllegalArgumentException("already like");
         }
 
         Post post = findById(postId);
-        likeInformRepository.save(new LikeInform(post, user));
+        likeRepository.save(new Like(post, user));
     }
 
     public Comment saveComment(CommentCreateForm form, Long userId, Long postId) {
@@ -130,7 +129,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PageInform getPostPageInformByCommentUserId(Long userId, Pageable pageable) {
-        return toPageInform(postRepository.findByComment_User_Id(userId, pageable));
+        return toPageInform(postRepository.findByCommentUserId(userId, pageable));
     }
 
 }

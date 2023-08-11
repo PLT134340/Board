@@ -62,7 +62,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public int countByPostId(Long postId) {
+    public Long countByPostId(Long postId) {
         return baseCommentRepository.countByPost_Id(postId);
     }
 

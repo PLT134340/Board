@@ -16,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.id in" +
             " (select distinct bc.post.id from BaseComment bc where bc.isRemoved = false and bc.user.id = :userId)")
     Page<Post> findByComment_User_Id(@Param("userId") Long userId, Pageable pageable);
+    Page<Post> findByCommentUserId(@Param("userId") Long userId, Pageable pageable);
 }

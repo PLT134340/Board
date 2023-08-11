@@ -10,10 +10,10 @@ public class PostSummaryInform {
     private Long id;
     private String title;
     private String username;
-    private int commentCount;
-    private int like;
+    private Long commentCount;
+    private Long like;
 
-    public PostSummaryInform(Post post, int commentCount, int likeCount) {
+    public PostSummaryInform(Post post, Long commentCount, Long likeCount) {
         id = post.getId();
         title = post.getTitle();
         username = post.getUser().getUsername();

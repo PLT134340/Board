@@ -20,10 +20,10 @@ public class PostInform {
     private String username;
     private String content;
     private List<CommentInform> comments;
-    private int commentCount;
-    private int likeCount;
+    private Long commentCount;
+    private Long likeCount;
 
-    public PostInform(Post post, List<Comment> commentList, int commentCount, int likeCount) {
+    public PostInform(Post post, List<Comment> commentList, Long commentCount, Long likeCount) {
         id = post.getId();
         title = post.getTitle();
         createdDateTime = post.getCreatedDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));

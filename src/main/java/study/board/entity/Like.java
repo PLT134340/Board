@@ -6,19 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "likes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LikeInform {
+public class Like {
 
     @Id @GeneratedValue
-    @Column(name = "like_inform_id")
+    @Column(name = "like_id")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    public LikeInform(Post post, User user) {
+    public Like(Post post, User user) {
         this.post = post;
         this.user = user;
     }
