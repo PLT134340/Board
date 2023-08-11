@@ -33,42 +33,38 @@ public class UserController {
         return "users/userList";
     }
 
-    @GetMapping("/{userId}")
-    public String userInform(@PathVariable("userId") Long userId, Model model) {
-        UserInform user = userService.toUserInform(userId);
+    @GetMapping("/myinform")
+    public String userInform(@AuthUser UserInform userInform, Model model) {
+        UserInform user = userService.toUserInform(userInform.getId());
         model.addAttribute("user", user);
         return "users/userInform";
     }
 
 
-    @GetMapping("/{userId}/edit")
-    public String modifyForm(@PathVariable("userId") Long userId, Model model) {
-
-        UserUpdateForm form = userService.toUserUpdateForm(userId);
+    @GetMapping("/myinform/edit")
+    public String modifyForm(@AuthUser UserInform userInform, Model model) {
+        UserUpdateForm form = userService.toUserUpdateForm(userInform.getId());
         model.addAttribute("form", form);
-
         return "users/modifyUserForm";
     }
 
-    @PostMapping("/{userId}/edit")
-    public String modify(@PathVariable("userId") Long userId,
-                         @Valid @ModelAttribute("form") UserUpdateForm form, BindingResult result,
-                         RedirectAttributes redirectAttributes) {
-
+    @PostMapping("/myinform/edit")
+    public String modify(@Valid @ModelAttribute("form") UserUpdateForm form, BindingResult result,
+                         @AuthUser UserInform userInform, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "users/modifyUserForm";
         }
 
-        userService.modify(form, userId);
+        userService.modify(form, userInform.getId());
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/users/{userId}";
+        return "redirect:/users/myinform";
     }
 
-    @PostMapping("/{userId}/delete")
-    public String withdraw(@PathVariable("userId") Long userId) {
-        userService.withdraw(userId);
-        return "redirect:/";
+    @PostMapping("/myinform/delete")
+    public String withdraw(@AuthUser UserInform userInform) {
+        userService.withdraw(userInform.getId());
+        return "redirect:/sign-out";
     }
 
     @GetMapping("/mypost")
