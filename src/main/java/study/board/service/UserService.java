@@ -59,6 +59,7 @@ public class UserService {
         return new UserInform(findById(id));
     }
 
+    @Transactional(readOnly = true)
     public UserUpdateForm toUserUpdateForm(Long id) {
         return new UserUpdateForm(findById(id));
     }

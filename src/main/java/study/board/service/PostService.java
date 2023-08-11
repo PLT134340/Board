@@ -42,11 +42,13 @@ public class PostService {
         return postRepository.save(new Post(form.getTitle(), form.getContent(), board, user)).getId();
     }
 
+    @Transactional(readOnly = true)
     public Post findById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("no such post"));
     }
 
+    @Transactional(readOnly = true)
     public PageInform getPageInformByKeyword(SearchType type, String keyword, Pageable pageable, Long boardId) {
         Page<Post> page;
         if(type == SearchType.TITLE) {
@@ -61,6 +63,7 @@ public class PostService {
         return toPageInform(page);
     }
 
+    @Transactional(readOnly = true)
     public PageInform toPageInform(Page<Post> page) {
         List<PostSummaryInform> posts = page.getContent()
                 .stream()
@@ -69,6 +72,7 @@ public class PostService {
         return new PageInform(page, posts);
     }
 
+    @Transactional(readOnly = true)
     public PostInform toPostInform(Long id) {
         Post post = findById(id);
 
@@ -83,6 +87,7 @@ public class PostService {
         findById(postId).updatePost(postUpdateForm.getTitle(), postUpdateForm.getContent());
     }
 
+    @Transactional(readOnly = true)
     public PostUpdateForm toPostUpdateForm(Long id) {
         return new PostUpdateForm(findById(id));
     }
@@ -118,10 +123,12 @@ public class PostService {
         commentService.removeComment(userId, commentId);
     }
 
+    @Transactional(readOnly = true)
     public PageInform getPostPageInformByUserId(Long userId, Pageable pageable) {
         return toPageInform(postRepository.findByUser_Id(userId, pageable));
     }
 
+    @Transactional(readOnly = true)
     public PageInform getPostPageInformByCommentUserId(Long userId, Pageable pageable) {
         return toPageInform(postRepository.findByComment_User_Id(userId, pageable));
     }

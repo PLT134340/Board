@@ -34,17 +34,19 @@ public class BoardService {
             throw new IllegalArgumentException("already exists name");
     }
 
-
+    @Transactional(readOnly = true)
     public Board findById(Long id) {
         return boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("no such board"));
     }
 
+    @Transactional(readOnly = true)
     public Board findByName(String name) {
         return boardRepository.findByName(name)
                 .orElseThrow(() -> new IllegalArgumentException("no such board"));
     }
 
+    @Transactional(readOnly = true)
     public List<BoardInform> searchByName(String name) {
         return boardRepository.findByNameContaining(name)
                 .stream()
@@ -52,6 +54,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public BoardInform toBoardInform(Long id) {
         return new BoardInform(findById(id));
     }

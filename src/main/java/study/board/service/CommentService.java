@@ -10,7 +10,6 @@ import study.board.entity.User;
 import study.board.entity.comment.Recomment;
 import study.board.repository.BaseCommentRepository;
 import study.board.repository.CommentRepository;
-import study.board.repository.RecommentRepository;
 
 import java.util.List;
 
@@ -21,23 +20,20 @@ public class CommentService {
 
     private final BaseCommentRepository baseCommentRepository;
     private final CommentRepository commentRepository;
-    private final RecommentRepository recommentRepository;
 
+    @Transactional(readOnly = true)
     public BaseComment findById(Long id) {
         return baseCommentRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("no such base comment"));
     }
 
+    @Transactional(readOnly = true)
     public Comment findCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalStateException("no such comment"));
     }
 
-    public Recomment findRecommentById(Long recommentId) {
-        return recommentRepository.findById(recommentId)
-                .orElseThrow(() -> new IllegalStateException("no such recomment"));
-    }
-
+    @Transactional(readOnly = true)
     public List<Comment> findAllByPostId(Long postId) {
         return commentRepository.findAllByPostId(postId);
     }
@@ -65,7 +61,8 @@ public class CommentService {
         }
     }
 
-    int countByPostId(Long postId) {
+    @Transactional(readOnly = true)
+    public int countByPostId(Long postId) {
         return baseCommentRepository.countByPost_Id(postId);
     }
 
