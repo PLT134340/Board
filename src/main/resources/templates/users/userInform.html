@@ -17,9 +17,8 @@
             </tr>
             </tbody>
         </table>
-        <div class="clearfix mb-1">
-            <a href="#" th:href="@{/users/{userId}/edit (userId=${user.id})}"
-               class="btn btn-primary float-end" role="button">수정</a>
+        <div class="d-flex justify-content-end my-1">
+            <a href="#" th:href="@{myinform/edit}" class="btn btn-primary" role="button">수정</a>
         </div>
     </div>
     <div th:replace="fragments/footer :: footer" />
