@@ -51,6 +51,7 @@
                         <div>
                             <div class="fw-bold" th:text="${comment.username}">닉네임</div>
                             <div th:text="${comment.content}">댓글</div>
+                            <div class="text-secondary" th:text="${comment.createdDateTime}">작성 시간</div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <div class="me-1">
@@ -73,6 +74,7 @@
                             <div>
                                 <div class="fw-bold" th:text="${recomment.username}">닉네임</div>
                                 <div th:text="${recomment.content}">대댓글</div>
+                                <div class="text-secondary" th:text="${recomment.createdDateTime}">작성 시간</div>
                             </div>
                             <form th:action="@{{postId}/{recommentId}/remove (postId=*{id}, recommentId=${recomment.id})}"
                                   sec:authorize="isAuthenticated()" method="post"
