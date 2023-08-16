@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.board.common.exception.UsernameDuplicateException;
 import study.board.entity.User;
 import study.board.repository.UserRepository;
 import study.board.service.dto.user.UserCreateForm;
@@ -30,7 +31,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void validateDuplicateUsername(String username) {
         if (userRepository.existsByUsername(username))
-            throw new IllegalArgumentException("already exists username");
+            throw new UsernameDuplicateException("username=" + username);
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +72,7 @@ public class UserService {
 
     private void validateDuplicateUsernameExcludeSelf(String username, Long id) {
         if (userRepository.existsByUsername(username) && !findByUsername(username).getId().equals(id))
-            throw new IllegalArgumentException("already exists username");
+            throw new UsernameDuplicateException("username=" + username);
     }
 
     public void withdraw(Long id) {

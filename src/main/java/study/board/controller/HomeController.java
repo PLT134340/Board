@@ -53,8 +53,7 @@ public class HomeController {
     }
 
     @GetMapping("/sign-in")
-    public String loginForm(HttpServletRequest request, @ModelAttribute("form") UserLoginForm form,
-                            @RequestParam(name = "error", defaultValue = "false") boolean error, Model model) {
+    public String loginForm(HttpServletRequest request, @ModelAttribute("form") UserLoginForm form) {
         String prevPage = (String) request.getSession().getAttribute("prevPage");
         String uri = request.getHeader("Referer");
 

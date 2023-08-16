@@ -3,6 +3,7 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.board.common.exception.CustomIllegalArgumentException;
 import study.board.entity.comment.BaseComment;
 import study.board.entity.comment.Comment;
 import study.board.entity.Post;
@@ -57,7 +58,7 @@ public class CommentService {
 
     private void validateCorrectUser(Long userId, BaseComment baseComment) {
         if (!baseComment.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException("improper comment remove request");
+            throw new CustomIllegalArgumentException("improper comment remove request");
         }
     }
 

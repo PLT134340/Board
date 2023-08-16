@@ -12,6 +12,7 @@
     <h2>회원가입</h2>
     <form role="form" th:action th:object="${form}" method="post">
         <div class="form-group">
+            <p th:if="${#strings.equals(param.error, 'duplicate')}" class="text-danger">이미 존재하는 닉네임입니다</p>
             <label th:for="username">닉네임</label>
             <input type="text" th:field="*{username}" class="form-control" placeholder="닉네임을 입력하세요"
                    th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">

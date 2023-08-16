@@ -10,7 +10,10 @@
 <div class="container">
   <div th:replace="fragments/bodyHeader :: bodyHeader"/>
   <h2>로그인</h2>
-  <p th:if="${param.error}" class="text-danger">Wrong username or password</p>
+  <div th:if="${param.error}">
+    <p th:if="${#strings.equals(param.error, 'wrong')}" class="text-danger">닉네임이나 비밀번호가 일치하지 않습니다</p>
+    <p th:if="${#strings.equals(param.error, 'delete')}" class="text-danger">탈퇴된 사용자입니다</p>
+  </div>
   <form role="form" th:action th:object="${form}" method="post">
     <div class="form-group">
       <label th:for="username">닉네임</label>

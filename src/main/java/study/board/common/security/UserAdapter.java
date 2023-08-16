@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class UserAdapter extends org.springframework.security.core.userdetails.User {
 
-    private UserInform userInform;
+    private final UserInform userInform;
 
     public UserAdapter(User user) {
         super(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority(UserPermission.USER.getValue())));

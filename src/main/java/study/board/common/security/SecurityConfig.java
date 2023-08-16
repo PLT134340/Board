@@ -31,21 +31,26 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/**/create"),
                                 new AntPathRequestMatcher("/**/write"),
                                 new AntPathRequestMatcher("/**/edit"),
+                                new AntPathRequestMatcher("/**/remove"),
                                 new AntPathRequestMatcher("/**/comment"),
                                 new AntPathRequestMatcher("/**/recomment"),
                                 new AntPathRequestMatcher("/**/like")).authenticated()
                         .requestMatchers("/**").permitAll())
+
                 .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
+
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter
                                 .XFrameOptionsMode.SAMEORIGIN)))
+
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/sign-in")
                         .loginProcessingUrl("/sign-in")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .successHandler(customSavedRequestAwareAuthenticationSuccessHandler())
-                        .failureUrl("/sign-in?error=true"))
+                        .failureUrl("/sign-in?error=wrong"))
+
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/sign-out"))
                         .logoutSuccessUrl("/")
@@ -65,8 +70,7 @@ public class SecurityConfig {
 
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler customSavedRequestAwareAuthenticationSuccessHandler() {
-        SavedRequestAwareAuthenticationSuccessHandler successHandler = new CustomSavedRequestAwareAuthenticationSuccessHandler();
-        return successHandler;
+        return new CustomSavedRequestAwareAuthenticationSuccessHandler();
     }
 
 }

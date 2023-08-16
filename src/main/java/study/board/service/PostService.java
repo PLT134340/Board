@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.board.common.exception.LikeDuplicateException;
+import study.board.common.exception.CustomIllegalArgumentException;
 import study.board.entity.*;
 import study.board.entity.comment.Comment;
 import study.board.entity.comment.Recomment;
@@ -58,7 +60,7 @@ public class PostService {
         } else if (type == SearchType.USERNAME) {
             page = postRepository.findByBoard_IdAndUser_UsernameContaining(boardId, keyword, pageable);
         } else {
-            throw new IllegalStateException("no such type");
+            throw new CustomIllegalArgumentException("no such search type");
         }
         return toPageInform(page);
     }
@@ -98,7 +100,7 @@ public class PostService {
 
         if (likes.stream()
                 .anyMatch(li -> li.getUser().equals(user))) {
-            throw new IllegalArgumentException("already like");
+            throw new LikeDuplicateException("postId=" + postId.toString() + " " + "userId=" + userId);
         }
 
         Post post = findById(postId);

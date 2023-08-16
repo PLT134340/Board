@@ -3,6 +3,7 @@ package study.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.board.common.exception.BoardNameDuplicateException;
 import study.board.entity.Board;
 import study.board.entity.User;
 import study.board.repository.BoardRepository;
@@ -31,7 +32,7 @@ public class BoardService {
 
     private void validateDuplicateName(String name) {
         if(boardRepository.existsByName(name))
-            throw new IllegalArgumentException("already exists name");
+            throw new BoardNameDuplicateException("already exists name");
     }
 
     @Transactional(readOnly = true)
