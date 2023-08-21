@@ -23,9 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/sign-in"),
-                                new AntPathRequestMatcher("/sign-up")).anonymous()
+                        .requestMatchers("/users").hasRole("ADMIN")
                         .requestMatchers(
                                 new AntPathRequestMatcher("/users/**"),
                                 new AntPathRequestMatcher("/**/create"),

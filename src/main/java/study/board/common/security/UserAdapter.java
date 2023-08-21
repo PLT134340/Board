@@ -1,7 +1,7 @@
 package study.board.common.security;
 
 import lombok.Getter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import study.board.entity.User;
 import study.board.service.dto.user.UserInform;
 
@@ -12,8 +12,8 @@ public class UserAdapter extends org.springframework.security.core.userdetails.U
 
     private final UserInform userInform;
 
-    public UserAdapter(User user) {
-        super(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority(UserPermission.USER.getValue())));
+    public UserAdapter(User user,List<GrantedAuthority> authorities) {
+        super(user.getUsername(), user.getPassword(), authorities);
         userInform = new UserInform(user);
     }
 }
